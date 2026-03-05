@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Không tìm thấy | Trung ương Đoàn</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="/favicon.ico">
+
+        <!-- App css -->
+
+        <link href="/baotri/app.min.css" rel="stylesheet" type="text/css" id="app-style"/>
+
+        <!-- icons -->
+        <link href="/baotri/icons.min.css" rel="stylesheet" type="text/css"/>
+    </head>
+</head>
+<body>
+<body class="">
+
+<div class="mt-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h1 class="text-error">404</h1>
+                                <h3 class="mt-3 mb-2">KHÔNG TÌM THẤY</h3>
+                                <p class="text-muted mb-3">Nội dung bạn truy cập không tìm thấy</p>
+
+                                <a href="/" class="btn btn-danger waves-effect waves-light">Quay về trang chủ</a>
+                            </div>
+                        </div> <!-- end card-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</body>
+</html>
