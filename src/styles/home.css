@@ -40,7 +40,6 @@
     top: 0;
     z-index: 1000;
     border-radius: 0 0 16px 16px;
-    margin-bottom: 20px;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -633,12 +632,21 @@
     transform: translateY(-2px);
 }
 
+.map-legend-wrapper{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
 .map-legend {
     font-size: medium;
     display: flex;
     gap: 20px;
-  padding: 10px;
+    padding: 10px;
+    overflow:hidden;
+    width:924px;
     border-top: 1px solid var(--border-color);
+    transition: transform 0.4s ease;
 }
 
 .legend-item {
@@ -647,6 +655,13 @@
     gap: 8px;
     font-size: 0.9rem;
     font-weight: 500;
+    min-width: 300px;
+    text-align:center;
+}
+
+.legend-next{
+    padding:6px 10px;
+    cursor:pointer;
 }
 
 .legend-item img {
@@ -1122,7 +1137,6 @@
 .footer-logo {
     height: 60px;
     margin-bottom: 20px;
-    filter: brightness(0) invert(1);
 }
 
 .brand-col h3 {
@@ -1280,10 +1294,15 @@
   margin: 0;
 }
 
+.full-width{
+    width: 100% !important;
+}
+
 .logos-group.background-header {
-  background-image: url('/images/anh-header.jpg');
+  background-image: url('/images/anh-header-2.png');
   background-position: center;
   background-repeat: no-repeat;
+  background-size: cover; 
   height: 150px;
   display: flex;
   align-items: center;

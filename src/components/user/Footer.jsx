@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="main-footer">
             <div className="footer-content glass-panel-dark">
                 <div className="footer-col brand-col">
-                    <img src="/images/huy-hieu-doan.svg" alt="Logo" className="footer-logo" />
+                    <img src="/images/logo-doan.png" alt="Logo" className="footer-logo" />
                     <h3>TỈNH ĐOÀN TUYÊN QUANG</h3>
                     <p>Khát vọng - Tiên phong - Đoàn kết - Sáng tạo - Phát triển</p>
                 </div>

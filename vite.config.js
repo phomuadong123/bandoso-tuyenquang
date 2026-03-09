@@ -7,6 +7,12 @@ export default defineConfig({
   server: {
     allowedHosts: [
       'cortically-summational-brain.ngrok-free.dev' 
-    ]
+    ],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
   }
 })

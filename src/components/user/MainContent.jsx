@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MOCK_DATA } from '../../data/mockData';
-import { MapPin, Phone, Users, CheckCircle, Info, Heart } from 'lucide-react';
+import { MapPin, Phone, Users, CheckCircle, Info, Heart, ChevronRight } from 'lucide-react';
 
 const MainContent = () => {
     const { locations, committee, statistics } = MOCK_DATA;
@@ -9,6 +9,39 @@ const MainContent = () => {
     const handleMarkerClick = (loc) => {
         setSelectedLocation(loc);
     };
+
+let start = 0;
+const visible = 3;
+
+function showLegend(){
+
+    const items = document.querySelectorAll("#legendContainer .legend-item");
+
+    items.forEach((item, index) => {
+
+        if(index >= start && index < start + visible){
+            item.style.display = "block";
+        }else{
+            item.style.display = "none";
+        }
+
+    });
+}
+
+function nextLegend(){
+
+    const items = document.querySelectorAll("#legendContainer .legend-item");
+
+    start += visible;
+
+    if(start >= items.length){
+        start = 0;
+    }
+
+    showLegend();
+}
+
+showLegend();
 
     return (
         <div className="main-content-area" >
@@ -40,13 +73,17 @@ const MainContent = () => {
                 </div>
 
                 {/* Chú thích Bản đồ */}
-                <div className="map-legend">
-                    <div className="legend-item"><img src="/images/em-nuoi.png" alt="Đang cần hỗ trợ" /> <span>Nhu cầu em nuôi của Đoàn</span></div>
-                    <div className="legend-item"><img src="/images/ngoi-nha.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà hạnh phúc</span></div>
-                    <div className="legend-item"><img src="/images/ngoi-nha-yeu-thuong.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà yêu thương</span></div>
-                    <div className="legend-item"><img src="/images/truong-hoc.png" alt="Trường" /> <span>Trường đẹp cho em</span></div>
-                    <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình đường điện thắp sáng đường quê</span></div>
-                    <div className="legend-item"><img src="/images/tim-kiem.png" alt="Tìm kiếm" /> <span>Tìm kiếm địa điểm</span></div>
+                <div class="map-legend-wrapper">
+                    <div className="map-legend" id="legendContainer">
+                        <div className="legend-item"><img src="/images/tim-kiem.png" alt="Tìm kiếm" /> <span>Tìm kiếm địa điểm</span></div>
+                        <div className="legend-item"><img src="/images/em-nuoi.png" alt="Đang cần hỗ trợ" /> <span>Nhu cầu em nuôi của Đoàn</span></div>
+                        <div className="legend-item"><img src="/images/ngoi-nha.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà hạnh phúc</span></div>
+                        <div className="legend-item"><img src="/images/ngoi-nha-yeu-thuong.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà yêu thương</span></div>
+                        <div className="legend-item"><img src="/images/truong-hoc.png" alt="Trường" /> <span>Trường đẹp cho em</span></div>
+                        <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình đường điện thắp sáng đường quê</span></div>
+                    </div>
+                        <button class="legend-next" onClick={() => nextLegend()}> <ChevronRight /> </button>
+
                 </div>
             </div>
 

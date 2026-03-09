@@ -4,19 +4,11 @@ import { Menu, Search } from 'lucide-react';
 const Header = () => {
     return (
         <header className="main-header glass-panel">
-            <div className="logos-group background-header">
-            <div className="header-top">
-                <img src="/images/logo-doan.png" alt="TW Đoàn" className="logo-doan" />
-                <div className="site-titles">
-                    <h1>BẢN ĐỒ SỐ TÌNH NGUYỆN</h1>
-                    <h2>TỈNH ĐOÀN TUYÊN QUANG</h2>
-                </div>
-            </div>
-
+                <img src="/images/anh-header-2.png" alt="TW Đoàn" className="full-width" />
                 {/* <div className="header-actions">
                 <button className="menu-toggle"><Menu size={24} /></button>
                 </div> */}
-            </div>
+            
 
             <nav className="header-nav">
                 <ul>
