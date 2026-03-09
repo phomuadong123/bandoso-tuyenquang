@@ -31,13 +31,19 @@ const MainContent = () => {
                             referrerPolicy="no-referrer-when-downgrade"
                             title="Google My Map Tuyen Quang"
                         ></iframe>
+                        <div class="marquee-container">
+                            <div class="marquee-text">
+                               Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Thành phố Tuyên Quang - Tỉnh Tuyên Quang. Điện thoại: 0207 3822 666 
+                            </div>
+                        </div>
                     </div>
-
                 </div>
 
                 {/* Chú thích Bản đồ */}
                 <div className="map-legend">
                     <div className="legend-item"><img src="/images/em-nuoi.png" alt="Đang cần hỗ trợ" /> <span>Nhu cầu em nuôi của Đoàn</span></div>
+                    <div className="legend-item"><img src="/images/ngoi-nha.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà hạnh phúc</span></div>
+                    <div className="legend-item"><img src="/images/ngoi-nha-yeu-thuong.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà yêu thương</span></div>
                     <div className="legend-item"><img src="/images/truong-hoc.png" alt="Trường" /> <span>Trường đẹp cho em</span></div>
                     <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình đường điện thắp sáng đường quê</span></div>
                     <div className="legend-item"><img src="/images/tim-kiem.png" alt="Tìm kiếm" /> <span>Tìm kiếm địa điểm</span></div>
