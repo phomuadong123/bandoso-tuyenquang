@@ -1,47 +1,62 @@
-import React, { useState } from 'react';
-import { MOCK_DATA } from '../../data/mockData';
-import { MapPin, Phone, Users, CheckCircle, Info, Heart, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Phone, Users, CheckCircle, ChevronRight } from 'lucide-react';
 
 const MainContent = () => {
-    const { locations, committee, statistics } = MOCK_DATA;
+    const [locations, setLocations] = useState([]);
+    const [committee, setCommittee] = useState([]);
+    const [statistics, setStatistics] = useState({});
     const [selectedLocation, setSelectedLocation] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [locRes, committeeRes, statsRes] = await Promise.all([
+                    fetch('/api/locations'),
+                    fetch('/api/committee'),
+                    fetch('/api/statistics')
+                ]);
+
+                if (locRes.ok) setLocations(await locRes.json());
+                if (committeeRes.ok) setCommittee(await committeeRes.json());
+                if (statsRes.ok) setStatistics(await statsRes.json());
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleMarkerClick = (loc) => {
         setSelectedLocation(loc);
     };
 
-let start = 0;
-const visible = 3;
+    const startRef = useRef(0);
+    const visible = 4;
 
-function showLegend(){
+    const showLegend = () => {
+        const items = document.querySelectorAll('#legendContainer .legend-item');
+        items.forEach((item, index) => {
+            if (index >= startRef.current && index < startRef.current + visible) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    };
 
-    const items = document.querySelectorAll("#legendContainer .legend-item");
-
-    items.forEach((item, index) => {
-
-        if(index >= start && index < start + visible){
-            item.style.display = "block";
-        }else{
-            item.style.display = "none";
+    const nextLegend = () => {
+        const items = document.querySelectorAll('#legendContainer .legend-item');
+        startRef.current += visible;
+        if (startRef.current >= items.length) {
+            startRef.current = 0;
         }
+        showLegend();
+    };
 
-    });
-}
-
-function nextLegend(){
-
-    const items = document.querySelectorAll("#legendContainer .legend-item");
-
-    start += visible;
-
-    if(start >= items.length){
-        start = 0;
-    }
-
-    showLegend();
-}
-
-showLegend();
+    useEffect(() => {
+        showLegend();
+    }, []);
 
     return (
         <div className="main-content-area" >
@@ -65,24 +80,29 @@ showLegend();
                             title="Google My Map Tuyen Quang"
                         ></iframe>
                         <div class="marquee-container">
-                            <div class="marquee-text">
+                            <div class="marquee-content">
+                                <span>
                                Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Thành phố Tuyên Quang - Tỉnh Tuyên Quang. Điện thoại: 0207 3822 666 
+                                </span>
+                                <span>
+                               Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Thành phố Tuyên Quang - Tỉnh Tuyên Quang. Điện thoại: 0207 3822 666 
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Chú thích Bản đồ */}
-                <div class="map-legend-wrapper">
+                <div className="map-legend-wrapper">
                     <div className="map-legend" id="legendContainer">
                         <div className="legend-item"><img src="/images/tim-kiem.png" alt="Tìm kiếm" /> <span>Tìm kiếm địa điểm</span></div>
-                        <div className="legend-item"><img src="/images/em-nuoi.png" alt="Đang cần hỗ trợ" /> <span>Nhu cầu em nuôi của Đoàn</span></div>
+                        <div className="legend-item"><img src="/images/nha-khan-quang-do.png" alt="Công trìnhh" /> <span>Nhà khăn quàng đỏ</span></div>
+                        <div className="legend-item"><img src="/images/truong-dep-cho-em.png" alt="Trường" /> <span>Trường đẹp cho em</span></div>
                         <div className="legend-item"><img src="/images/ngoi-nha.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà hạnh phúc</span></div>
                         <div className="legend-item"><img src="/images/ngoi-nha-yeu-thuong.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà yêu thương</span></div>
-                        <div className="legend-item"><img src="/images/truong-hoc.png" alt="Trường" /> <span>Trường đẹp cho em</span></div>
-                        <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình đường điện thắp sáng đường quê</span></div>
+                        <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình thắp sáng đường quê</span></div>
                     </div>
-                        <button class="legend-next" onClick={() => nextLegend()}> <ChevronRight /> </button>
+                        <button className="legend-next" onClick={() => nextLegend()}> <ChevronRight /> </button>
 
                 </div>
             </div>
@@ -131,18 +151,18 @@ showLegend();
                             </div>
                             
                             <div className="info-group">
-                            <span className="info-label">Năm thành lập:</span>
-                            <span className="info-value">2021</span>
+                            <span className="info-label">Tổng giá trị tiếp nhận:</span>
+                            <span className="info-value">{statistics.totalValue ?? 'Đang tải...'}</span>
                             </div>
 
                             <div className="info-group">
                             <span className="info-label">Số lượng em hỗ trợ:</span>
-                            <span className="info-value">210</span>
+                            <span className="info-value">{statistics.volunteersCount ?? 'Đang tải...'}</span>
                             </div>
 
                             <div className="info-group">
-                            <span className="info-label">Trung bình mức hỗ trợ hàng tháng:</span>
-                            <span className="info-value">200 nghìn - 2 triệu VNĐ</span>
+                            <span className="info-label">Số hoạt động:</span>
+                            <span className="info-value">{statistics.activitiesCount ?? 'Đang tải...'}</span>
                             </div>
                         </div>
                         <div className="card-arrow">
@@ -158,18 +178,13 @@ showLegend();
                             </div>
                             
                             <div className="info-group">
-                            <span className="info-label">Quy mô tiếp nhận thực hiện:</span>
-                            <span className="info-value bold">Cấp xã</span>
-                            </div>
-
-                            <div className="info-group">
                             <span className="info-label">Số lượng điểm:</span>
-                            <span className="info-value">143 xã</span>
+                            <span className="info-value">{locations.length || 'Đang tải...'}</span>
                             </div>
 
                             <div className="info-group">
-                            <span className="info-label">Đã tiếp nhận trong năm 2023:</span>
-                            <span className="info-value">3.51 tỷ đồng</span>
+                            <span className="info-label">Số dự án/đơn vị:</span>
+                            <span className="info-value">{statistics.projectsCount ?? 'Đang tải...'}</span>
                             </div>
                         </div>
                         <div className="card-arrow">
@@ -187,12 +202,12 @@ showLegend();
                             
                             <div className="info-group">
                             <span className="info-label">Số lượng hỗ trợ lâu dài</span>
-                            <span className="info-value bold">68</span>
+                            <span className="info-value bold">{statistics.volunteersCount ?? 'Đang tải...'}</span>
                             </div>
 
                             <div className="info-group">
                             <span className="info-label">Đã tiếp nhận (tổng trị giá):</span>
-                            <span className="info-value">2.1 tỷ đồng</span>
+                            <span className="info-value">{statistics.totalValue ?? 'Đang tải...'}</span>
                             </div>
                         </div>
                         <div className="card-arrow">

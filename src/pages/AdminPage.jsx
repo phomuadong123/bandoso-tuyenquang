@@ -25,13 +25,15 @@ const AdminPage = () => {
         { key: 'id', label: 'Mã' },
         { key: 'number', label: 'Số hiệu, Ký hiệu' },
         { key: 'date', label: 'Ngày ban hành' },
-        { key: 'excerpt', label: 'Trích yếu' }
+        { key: 'excerpt', label: 'Trích yếu' },
+        { key: 'file_path', label: 'Tệp', render: (val) => val ? <a href={val} target="_blank" rel="noreferrer">Xem tài liệu</a> : 'Chưa có file' }
     ];
     const docFields = [
         { key: 'id', label: 'Mã văn bản (VD: VB04)' },
         { key: 'number', label: 'Số hiệu (VD: 126-CV/TĐTN)' },
         { key: 'date', label: 'Ngày ban hành' },
-        { key: 'excerpt', label: 'Nội dung trích yếu', type: 'textarea' }
+        { key: 'excerpt', label: 'Nội dung trích yếu', type: 'textarea' },
+        { key: 'file_path', label: 'Tệp (PDF/DOC/DOCX)', type: 'file', accept: '.pdf,.doc,.docx', uploadEndpoint: '/api/upload-file', uploadFieldName: 'file', required: false }
     ];
 
     // Cấu hình bảng Ban Phong trào

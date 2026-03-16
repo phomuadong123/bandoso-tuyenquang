@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { MOCK_DATA } from '../../data/mockData';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Slider = () => {
-    const { news } = MOCK_DATA;
+    const [news, setNews] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const res = await fetch('/api/news');
+                if (!res.ok) throw new Error('Failed to fetch news');
+                const data = await res.json();
+                setNews(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchNews();
+    }, []);
+
+    useEffect(() => {
+        if (news.length === 0) return;
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % news.length);
         }, 5000);
@@ -20,6 +35,14 @@ const Slider = () => {
     const getPrev = () => setCurrentIndex((prev) => (prev - 1 + news.length) % news.length);
     const getNext = () => setCurrentIndex((prev) => (prev + 1) % news.length);
 
+    if (news.length === 0) {
+        return (
+            <div className="slider-wrapper glass-panel" id="tin-tuc">
+                <div className="slider-loading">Đang tải tin tức...</div>
+            </div>
+        );
+    }
+
     return (
         <div className="slider-wrapper glass-panel" id="tin-tuc">
             <div
@@ -27,7 +50,7 @@ const Slider = () => {
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
                 {news.map((item, index) => (
-                    <div className="slide" key={index}>
+                    <div className="slide" key={item.id ?? index}>
                         <div className="slide-image-container">
                             <img src={item.image} alt={item.title} className="slide-image" />
                             <div className="slide-overlay">
@@ -43,9 +66,9 @@ const Slider = () => {
             <button className="slider-btn next-btn" onClick={getNext}><ChevronRight /></button>
 
             <div className="slider-dots">
-                {news.map((_, index) => (
+                {news.map((item, index) => (
                     <button
-                        key={index}
+                        key={item.id ?? index}
                         className={`dot ${currentIndex === index ? 'active' : ''}`}
                         onClick={() => goToSlide(index)}
                     ></button>

@@ -35,6 +35,29 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
   }
 });
 
+// Serve uploaded files (pdf/doc/audio/video/etc)
+app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
+
+// Route Upload Generic File (pdf/doc/docx/mp3...)
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/uploads');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const uploadFile = multer({ storage: fileStorage });
+
+app.post('/api/upload-file', uploadFile.single('file'), (req, res) => {
+  if (req.file) {
+    res.json({ url: '/uploads/' + req.file.filename });
+  } else {
+    res.status(400).json({ error: 'Vui lòng chọn tệp' });
+  }
+});
+
 // Lấy dữ liệu video/audio cho SidebarMedia
 app.get('/api/videos', async (req, res) => {
   try {
@@ -153,26 +176,30 @@ app.delete('/api/news/:id', async (req, res) => {
 
 // --- CRUD CHO VĂN BẢN (DOCUMENTS) ---
 app.post('/api/documents', async (req, res) => {
-  const { id, number, excerpt, date } = req.body;
+  const { id, number, excerpt, date, file_path } = req.body;
   try {
-    await pool.query('INSERT INTO documents (id, number, excerpt, date) VALUES (?, ?, ?, ?)', [id, number, excerpt, date]);
-    res.json({ id, number, excerpt, date });
+    await pool.query('INSERT INTO documents (id, number, excerpt, date, file_path) VALUES (?, ?, ?, ?, ?)', [id, number, excerpt, date, file_path]);
+    res.json({ id, number, excerpt, date, file_path });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.put('/api/documents/:id', async (req, res) => {
-  const { number, excerpt, date } = req.body;
+app.put('/api/documents/:id(*)', async (req, res) => {
+  const { number, excerpt, date, file_path } = req.body;
   try {
-    await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ? WHERE id = ?', [number, excerpt, date, req.params.id]);
+    if (file_path) {
+      await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ?, file_path = ? WHERE id = ?', [number, excerpt, date, file_path, req.params.id]);
+    } else {
+      await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ? WHERE id = ?', [number, excerpt, date, req.params.id]);
+    }
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.delete('/api/documents/:id', async (req, res) => {
+app.delete('/api/documents/:id(*)', async (req, res) => {
   try {
     await pool.query('DELETE FROM documents WHERE id = ?', [req.params.id]);
     res.json({ success: true });

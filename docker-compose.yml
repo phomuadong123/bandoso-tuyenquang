@@ -28,7 +28,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./public/images:/app/public/images
+      - ./public:/app/public
     depends_on:
       - db
 

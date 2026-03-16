@@ -1,5 +1,4 @@
 import React from 'react';
-import { MOCK_DATA } from '../../data/mockData';
 import { Volume2, Video, ExternalLink } from 'lucide-react';
 import SidebarMedia from './SidebarMedia';
 import DocumentWidget from './DocumentWidget';
@@ -20,9 +19,7 @@ const Sidebar = ({ className }) => {
                     <img src="/images/logo-tw-doan.png" alt="TW Đoàn" className="banner-img" />
                 </a>
                 <a href="https://tuyenquang.gov.vn/" target="_blank" rel="noreferrer" className="banner-link hover-lift">
-                    <div className="banner-placeholder">
-                        Cổng TTĐT Tỉnh Tuyên Quang <ExternalLink size={16} />
-                    </div>
+                   <img src="/images/congthongtindientu.png" alt="TW Đoàn" className="banner-img" />
                 </a>
             </div>
         </div>

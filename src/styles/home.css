@@ -8,7 +8,7 @@
 .main-wrapper {
     display: flex;
     gap: 24px;
-    max-width: 1400px;
+    max-width: 1800px;
     margin: 24px auto;
     padding: 0 20px;
     flex: 1;
@@ -460,7 +460,7 @@
 
 .map-container {
     position: relative;
-    height: 500px;
+    height: 700px;
     border-radius: 12px;
     padding: 12px 12px 36px 12px;
     overflow: hidden;
@@ -639,24 +639,23 @@
 }
 
 .map-legend {
-    font-size: medium;
-    display: flex;
+    display: flex; /* Kích hoạt flex */
+    flex-direction: row; /* Đảm bảo nằm hàng ngang */
     gap: 20px;
     padding: 10px;
-    overflow:hidden;
-    width:924px;
+    width: 100%;
+    overflow: hidden; /* Ẩn các item thừa để trượt */
     border-top: 1px solid var(--border-color);
-    transition: transform 0.4s ease;
+    scroll-behavior: smooth;
 }
 
 .legend-item {
-    display: flex;
+    display: flex; /* Flex bên trong item để ảnh và chữ nằm cạnh nhau */
     align-items: center;
     gap: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    min-width: 300px;
-    text-align:center;
+    flex-shrink: 0; /* QUAN TRỌNG: Ngăn item bị co lại nhỏ xíu */
+    width: 300px; /* Độ rộng cố định cho mỗi item */
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .legend-next{
@@ -665,8 +664,8 @@
 }
 
 .legend-item img {
-  width: 20px;
-  height: 20px; 
+  width: 30px;
+  height: 30px; 
   margin-right: 6px; 
   object-fit: contain; 
 }
@@ -676,26 +675,33 @@
   line-height: 1.2; 
   color: #333; 
 }
-
 .marquee-container {
   width: 100%;
-  overflow: hidden; /* Ẩn phần chữ thừa bên ngoài khung */
-  background: #ffffff;
-  white-space: nowrap; /* Không cho chữ xuống dòng */
+  overflow: hidden;
+  white-space: nowrap;
+  background: #fff;
+  border-top: 1px solid #ccc;
 }
 
-.marquee-text {
-  display: inline-block;
+.marquee-content{
+  display:inline-flex;
+  padding-left:100%;
+  animation: marquee-slow 60s linear infinite !important;
+}
+
+.marquee-content span {
   font-size: 14px;
-  font-weight: 400;
-  color: #000000;
-  padding-left: 100%; /* Bắt đầu từ ngoài mép phải */
-  animation: marquee 50s linear infinite; /* Tên - Thời gian - Kiểu chạy - Lặp vô tận */
+  color: #000;
+  white-space: nowrap;
 }
 
-@keyframes marquee {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-100%, 0); }
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-slow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Overlay và Content */

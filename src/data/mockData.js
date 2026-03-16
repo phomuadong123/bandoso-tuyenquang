@@ -13,21 +13,21 @@ export const MOCK_DATA = {
   news: [
     {
       id: 1,
-      title: "Hành trình Tháng Thanh Niên 2024 tại Tuyên Quang",
+      title: "HỘI THẢO “CHUYỂN ĐỔI XANH - ĐỘNG LỰC THÚC ĐẨY PHÁT TRIỂN KINH TẾ, ĐẢM BẢO MÔI TRƯỜNG BỀN VỮNG”",
       image: "/images/news1.jpg",
-      date: "26/03/2024"
+      date: "26/11/2025"
     },
     {
       id: 2,
       title: "Khánh thành công trình Thắp sáng đường quê",
       image: "/images/news2.jpg",
-      date: "20/03/2024"
+      date: "17/11/2025"
     },
     {
       id: 3,
       title: "Tuổi trẻ Tuyên Quang chung tay bảo vệ môi trường",
       image: "/images/news3.jpg",
-      date: "15/03/2024"
+      date: "15/03/2025"
     }
   ],
 

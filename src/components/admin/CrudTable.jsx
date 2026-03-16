@@ -55,15 +55,18 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
         });
     };
 
-    const handleFileChange = async (e, fieldKey) => {
+    const handleFileChange = async (e, field) => {
         const file = e.target.files[0];
         if (!file) return;
 
         const fileData = new FormData();
-        fileData.append('image', file);
+        const uploadFieldName = field.uploadFieldName || 'image';
+        fileData.append(uploadFieldName, file);
+
+        const uploadEndpoint = field.uploadEndpoint || '/api/upload';
 
         try {
-            const res = await fetch('/api/upload', {
+            const res = await fetch(uploadEndpoint, {
                 method: 'POST',
                 body: fileData
             });
@@ -71,12 +74,12 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
             if (data.url) {
                 setFormData({
                     ...formData,
-                    [fieldKey]: data.url
+                    [field.key]: data.url
                 });
             }
         } catch (error) {
-            console.error("Lỗi thông qua hệ thống upload:", error);
-            alert("Lỗi tải lên ảnh.");
+            console.error('Lỗi thông qua hệ thống upload:', error);
+            alert('Lỗi tải lên tệp.');
         }
     };
 
@@ -84,7 +87,7 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
         e.preventDefault();
         try {
             const method = editingItem ? 'PUT' : 'POST';
-            const url = editingItem ? `${endpoint}/${editingItem.id}` : endpoint;
+            const url = editingItem ? `${endpoint}/${encodeURIComponent(editingItem.id)}` : endpoint;
 
             const res = await fetch(url, {
                 method,
@@ -106,7 +109,7 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
     const handleDelete = async (id) => {
         if (!window.confirm('Bạn có chắc chắn muốn xóa bản ghi này?')) return;
         try {
-            const res = await fetch(`${endpoint}/${id}`, {
+            const res = await fetch(`${endpoint}/${encodeURIComponent(id)}`, {
                 method: 'DELETE'
             });
             if (res.ok) {
@@ -196,14 +199,22 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
                                         <div className="file-input-wrapper">
                                             <input
                                                 type="file"
-                                                accept="image/*"
-                                                onChange={(e) => handleFileChange(e, field.key)}
+                                                accept={field.accept || 'image/*'}
+                                                onChange={(e) => handleFileChange(e, field)}
                                                 className="form-input"
                                                 required={field.required !== false && !formData[field.key]}
                                             />
                                             {formData[field.key] && (
                                                 <div className="image-preview">
-                                                    <img src={formData[field.key]} alt="Preview" />
+                                                    {formData[field.key].endsWith('.mp3') ? (
+                                                        <audio controls style={{ width: '100%' }}>
+                                                            <source src={formData[field.key]} />
+                                                        </audio>
+                                                    ) : formData[field.key].endsWith('.pdf') ? (
+                                                        <a href={formData[field.key]} target="_blank" rel="noreferrer">Xem file PDF</a>
+                                                    ) : (
+                                                        <img src={formData[field.key]} alt="Preview" />
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
