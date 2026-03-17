@@ -30,7 +30,7 @@ const AdminSidebar = ({ activeTab, setActiveTab }) => {
                     <FileText size={20} /> Văn bản chỉ đạo
                 </button>
                 <button className={`nav-item ${activeTab === 'committee' ? 'active' : ''}`} onClick={() => setActiveTab('committee')}>
-                    <Activity size={20} /> Ban phong trào
+                    <Activity size={20} /> Ban quản trị
                 </button>
             </nav>
 

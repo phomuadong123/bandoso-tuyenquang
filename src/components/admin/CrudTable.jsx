@@ -58,6 +58,8 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
     const handleFileChange = async (e, field) => {
         const file = e.target.files[0];
         if (!file) return;
+        console.log(field);
+        
 
         const fileData = new FormData();
         const uploadFieldName = field.uploadFieldName || 'image';
@@ -65,12 +67,15 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
 
         const uploadEndpoint = field.uploadEndpoint || '/api/upload';
 
+        console.log('Uploading file to:', uploadEndpoint);
+
         try {
             const res = await fetch(uploadEndpoint, {
                 method: 'POST',
                 body: fileData
             });
             const data = await res.json();
+            console.log('Upload response:', data);
             if (data.url) {
                 setFormData({
                     ...formData,

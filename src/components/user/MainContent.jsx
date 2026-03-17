@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Users, CheckCircle, ChevronRight } from 'lucide-react';
+import MapComponent from './MapComponent';
+import CustomMapSearch from './MapComponent';
 
 const MainContent = () => {
     const [locations, setLocations] = useState([]);
@@ -68,6 +70,7 @@ const MainContent = () => {
 
                 <div className="map-container">
                     {/* Iframe Google My Maps */}
+                    {/* <MapComponent/> */}
                     <div className="google-map-embed">
                         <iframe
                             src="https://www.google.com/maps/d/u/0/embed?mid=1Y7V10Hzt9EYHf7j1Dg74vbBlSaEpgVk&ehbc=2E312F"
@@ -82,10 +85,10 @@ const MainContent = () => {
                         <div class="marquee-container">
                             <div class="marquee-content">
                                 <span>
-                               Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Thành phố Tuyên Quang - Tỉnh Tuyên Quang. Điện thoại: 0207 3822 666 
+                               Tỉnh đoàn - Hội LHTN - Hội đồng đội Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Tỉnh Tuyên Quang . Điện thoại: 0207 3822 666 
                                 </span>
                                 <span>
-                               Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Thành phố Tuyên Quang - Tỉnh Tuyên Quang. Điện thoại: 0207 3822 666 
+                               Tỉnh đoàn - Hội LHTN - Hội đồng đội Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Tỉnh Tuyên Quang . Điện thoại: 0207 3822 666 
                                 </span>
                             </div>
                         </div>
@@ -97,7 +100,7 @@ const MainContent = () => {
                     <div className="map-legend" id="legendContainer">
                         <div className="legend-item"><img src="/images/tim-kiem.png" alt="Tìm kiếm" /> <span>Tìm kiếm địa điểm</span></div>
                         <div className="legend-item"><img src="/images/nha-khan-quang-do.png" alt="Công trìnhh" /> <span>Nhà khăn quàng đỏ</span></div>
-                        <div className="legend-item"><img src="/images/truong-dep-cho-em.png" alt="Trường" /> <span>Trường đẹp cho em</span></div>
+                        <div className="legend-item"><img src="/images/truong-dep-cho-em.png" alt="Trường" /> <span>Nhiều nhu cầu khác</span></div>
                         <div className="legend-item"><img src="/images/ngoi-nha.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà hạnh phúc</span></div>
                         <div className="legend-item"><img src="/images/ngoi-nha-yeu-thuong.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà yêu thương</span></div>
                         <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình thắp sáng đường quê</span></div>
@@ -109,9 +112,8 @@ const MainContent = () => {
 
             {/* THÔNG TIN KẾT QUẢ VÀ BAN PHONG TRÀO */}
             <div className="main-content-area" id="ban-phong-trao">
-                {/* Ban Phong trào */}
                 <div className="committee-section glass-panel" style={{ marginBottom: '20px' }} >
-                    <h3 className="section-title"><Users /> Ban Phong trào Tỉnh đoàn</h3>
+                    <h3 className="section-title"><Users /> Ban Quản Trị Tỉnh Đoàn</h3>
                     <div className="committee-list">
                         {committee.map((member, idx) => (
                             <div className="committee-card hover-lift" key={idx}>

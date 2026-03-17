@@ -33,7 +33,7 @@ const AdminPage = () => {
         { key: 'number', label: 'Số hiệu (VD: 126-CV/TĐTN)' },
         { key: 'date', label: 'Ngày ban hành' },
         { key: 'excerpt', label: 'Nội dung trích yếu', type: 'textarea' },
-        { key: 'file_path', label: 'Tệp (PDF/DOC/DOCX)', type: 'file', accept: '.pdf,.doc,.docx', uploadEndpoint: '/api/upload-file', uploadFieldName: 'file', required: false }
+        { key: 'file_path', label: 'Tệp (PDF)', type: 'file', accept: '.pdf,.doc,.docx', uploadEndpoint: '/api/upload-file', uploadFieldName: 'file', required: false }
     ];
 
     // Cấu hình bảng Ban Phong trào
@@ -99,7 +99,7 @@ const AdminPage = () => {
                                 activeTab === 'videos' ? 'Quản lý Video Tuyên truyền' :
                                     activeTab === 'audios' ? 'Quản lý Audio / Podcast' :
                                         activeTab === 'documents' ? 'Quản lý Văn bản chỉ đạo' :
-                                            'Quản lý Ban phong trào & Kết quả'
+                                            'Quản lý Ban quản trị & Kết quả'
                 } />
 
                 <div className="admin-content glass-panel">
@@ -107,15 +107,15 @@ const AdminPage = () => {
                         <div className="dashboard-stats">
                             <div className="stat-card">
                                 <h4>Tổng số người dùng</h4>
-                                <h2>1.240</h2>
+                                <h2>1</h2>
                             </div>
                             <div className="stat-card">
                                 <h4>Lượt truy cập hôm nay</h4>
-                                <h2>356</h2>
+                                <h2>1</h2>
                             </div>
                             <div className="stat-card">
                                 <h4>Quỹ đóng góp mới</h4>
-                                <h2>12.5M VNĐ</h2>
+                                <h2>1xxM VNĐ</h2>
                             </div>
                         </div>
                     )}
@@ -167,7 +167,7 @@ const AdminPage = () => {
 
                     {activeTab === 'committee' && (
                         <CrudTable
-                            title="Danh sách Nhân sự Ban Phong Trào"
+                            title="Danh sách Nhân sự Ban quản trị tỉnh đoàn"
                             endpoint="/api/committee"
                             columns={comColumns}
                             formFields={comFields}

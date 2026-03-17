@@ -27,12 +27,19 @@ const SidebarMedia = () => {
     <div className="sidebar-widget media-widget">
       <h3 className="widget-title">Góc truyền thông</h3>
 
+      <a href="https://www.facebook.com/profile.php?id=100035570125235" target="_blank" rel="noreferrer" className="banner-link hover-lift">
+        <img src="/images/mat-tran.jpg" alt="TW Đoàn" className="banner-img" />
+      </a>
+
       <a href="http://doanthanhnien.vn" target="_blank" rel="noreferrer" className="banner-link hover-lift">
         <img src="/images/tuoi-tre-thanh-nien.jpg" alt="TW Đoàn" className="banner-img" />
       </a>
       {/* Phần Video YouTube */}
       <div className="media-item">
-        <h4 className="media-title"><Video size={18} style={{ marginRight: 8 }} /> Video mới nhất</h4>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+          <Video size={20} className="video-icon" style={{ marginRight: '8px', color: '#0056b3' }} />
+          <span style={{ fontSize: '14px', fontWeight: '500' }}>Video mới nhất</span>
+        </div>
         {videos.length === 0 ? (
           <p>Đang tải video...</p>
         ) : (
@@ -63,7 +70,7 @@ const SidebarMedia = () => {
       </div>
 
       {/* Phần Audio */}
-      <div className="media-item audio-item" style={{ marginTop: '15px' }}>
+      <div className="media-item" style={{ marginTop: '15px' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
           <Volume2 size={20} className="audio-icon" style={{ marginRight: '8px', color: '#0056b3' }} />
           <span style={{ fontSize: '14px', fontWeight: '500' }}>Audio mới nhất</span>

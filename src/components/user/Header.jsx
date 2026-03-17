@@ -14,9 +14,10 @@ const Header = () => {
                 <ul>
                     <li className="active"><a href="/">Trang chủ</a></li>
                     <li><a href="#ban-do">Bản đồ số</a></li>
-                    <li><a href="#ban-phong-trao">Ban phong trào</a></li>
+                    <li><a href="#ban-phong-trao">Ban quản trị</a></li>
                     <li><a href="http://tinhdoantuyenquang.vn/" target="_blank">Thông tin Tỉnh đoàn</a></li>
-                    <li className="admin-link"><a href="/admin">Trang Quản Trị</a></li>
+                    <li><a href="http://mttq.tuyenquang.gov.vn/HethongCT/1/1/Ban-Thuong-vu.html" target="_blank">Thông tin Mặt trận</a></li>
+                    <li className="admin-link"><a href="/admin">Trang quản trị</a></li>
                 </ul>
             </nav>
         </header>
