@@ -3,6 +3,7 @@ USE bandoso_tq;
 
 CREATE TABLE statistics (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    is_active TINYINT(1) DEFAULT 0,
     total_value VARCHAR(100),
     activities_count INT,
     volunteers_count INT,
@@ -15,6 +16,7 @@ CREATE TABLE news (
     title VARCHAR(255),
     image VARCHAR(255),
     date VARCHAR(50),
+    is_active BOOL DEFAULT 0 NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,6 +29,7 @@ CREATE TABLE IF NOT EXISTS locations (
   phone VARCHAR(50),
   needs TEXT,
   status VARCHAR(100),
+  is_active BOOL DEFAULT 0 NULL,
   image VARCHAR(255)
 );
 
@@ -34,13 +37,15 @@ CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  role ENUM('admin', 'guest') DEFAULT 'guest'
+  role ENUM('admin', 'guest') DEFAULT 'guest',
+  is_active BOOL DEFAULT 0 NULL
 );
 
 CREATE TABLE IF NOT EXISTS videos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   url VARCHAR(255) NOT NULL,
+  is_active BOOL DEFAULT 0 NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -48,6 +53,7 @@ CREATE TABLE IF NOT EXISTS audios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   url VARCHAR(255) NOT NULL,
+  is_active BOOL DEFAULT 0 NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -56,6 +62,7 @@ CREATE TABLE documents (
     number VARCHAR(100),
     excerpt TEXT,
     date VARCHAR(50),
+    is_active BOOL DEFAULT 0 NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -66,23 +73,49 @@ CREATE TABLE committee (
     phone VARCHAR(50),
     avatar VARCHAR(255),
     unit VARCHAR(150),
+    is_active BOOL DEFAULT 0 NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE locations (
-    id VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(150),
-    lat DECIMAL(10, 6),
-    lng DECIMAL(10, 6),
-    secretary VARCHAR(100),
-    phone VARCHAR(50),
-    needs TEXT,
-    status VARCHAR(50),
-    image VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE activities (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    type ENUM('model', 'location', 'program'),
+    note TEXT
 );
 
--- SEED DATA TỪ MOCKDATA --
+CREATE TABLE receipts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    activity_id INT,
+    
+    donor_name VARCHAR(255),
+    donor_type ENUM('individual', 'organization'),
+    
+    location_name VARCHAR(255), -- lưu text cho nhanh
+    
+    received_at DATETIME,
+    note TEXT,
+
+    FOREIGN KEY (activity_id) REFERENCES activities(id)
+);
+
+CREATE TABLE receipt_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    receipt_id INT,
+
+    item_name VARCHAR(255),     -- tiền, gạo, sách...
+    unit VARCHAR(50),           -- VND, kg, quyển
+
+    quantity DECIMAL(12,2),
+    unit_price DECIMAL(12,2),
+    total_value DECIMAL(18,2),
+
+    note TEXT,
+
+    FOREIGN KEY (receipt_id) REFERENCES receipts(id)
+);
+
+-- SEED DATA --
 INSERT INTO statistics (total_value, activities_count, volunteers_count, projects_count)
 VALUES ('15.5 Tỷ VNĐ', 320, 15400, 45);
 

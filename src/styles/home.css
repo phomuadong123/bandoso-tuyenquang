@@ -603,6 +603,10 @@
     margin-bottom: 16px;
 }
 
+#vnpt_ai_livechat_button {
+    z-index: 1 !important;
+}
+
 .status-badge.done {
     background: rgba(52, 199, 89, 0.1);
     color: #34c759;

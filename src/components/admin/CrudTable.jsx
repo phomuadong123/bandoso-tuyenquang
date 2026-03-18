@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Pencil, Trash2, X, Plus } from 'lucide-react';
+import { Pencil, Trash2, X, Plus, CheckCircle, XCircle } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import { toast } from 'react-toastify';
 
 const CrudTable = ({ title, endpoint, columns, formFields }) => {
     const [data, setData] = useState([]);
@@ -12,7 +13,7 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(endpoint);
+            const res = await fetch(endpoint + '?admin=true');
             const json = await res.json();
             setData(json);
         } catch (error) {
@@ -82,9 +83,10 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
                     [field.key]: data.url
                 });
             }
+            toast.success("Tải lên tệp thành công!");
         } catch (error) {
             console.error('Lỗi thông qua hệ thống upload:', error);
-            alert('Lỗi tải lên tệp.');
+            toast.error("Tải lên tệp thất bại!");
         }
     };
 
@@ -102,9 +104,10 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
 
             if (res.ok) {
                 handleCloseModal();
+                toast.success("Lưu dữ liệu thành công!");
                 fetchData(); // Reload data
             } else {
-                alert('Có lỗi xảy ra khi lưu dữ liệu!');
+                toast.error("Có lỗi xảy ra khi lưu dữ liệu!");
             }
         } catch (error) {
             console.error('Lỗi cập nhật:', error);
@@ -119,11 +122,32 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
             });
             if (res.ok) {
                 fetchData(); // Reload data
+                toast.success("Xóa bản ghi thành công!");
             } else {
-                alert('Xóa không thành công!');
+                toast.error("Xóa bản ghi thất bại!");
             }
         } catch (error) {
             console.error('Lỗi xóa:', error);
+        }
+    };
+
+    const handleToggleActive = async (item) => {
+        if (item.is_active === undefined) return;
+        const updated = { ...item, is_active: item.is_active ? 0 : 1 };
+        try {
+            const res = await fetch(`${endpoint}/${encodeURIComponent(item.id)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updated)
+            });
+            if (res.ok) {
+                fetchData();
+                toast.success(`Đã ${updated.is_active ? 'bật' : 'tắt'} thành công!`);
+            } else {
+                toast.error("Không thể cập nhật trạng thái hoạt động.");
+            }
+        } catch (error) {
+            console.error('Lỗi cập nhật trạng thái hoạt động:', error);
         }
     };
 
@@ -143,17 +167,18 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
                             {columns.map(col => (
                                 <th key={col.key}>{col.label}</th>
                             ))}
+                            <th>Active</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         {isLoading ? (
                             <tr>
-                                <td colSpan={columns.length + 1} className="empty-state">Đang tải dữ liệu...</td>
+                                <td colSpan={columns.length + 2} className="empty-state">Đang tải dữ liệu...</td>
                             </tr>
                         ) : data.length === 0 ? (
                             <tr>
-                                <td colSpan={columns.length + 1} className="empty-state">Không có dữ liệu</td>
+                                <td colSpan={columns.length + 2} className="empty-state">Không có dữ liệu</td>
                             </tr>
                         ) : (
                             data.map((item, idx) => (
@@ -163,6 +188,18 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
                                             {col.render ? col.render(item[col.key], item) : item[col.key]}
                                         </td>
                                     ))}
+                                    <td>
+                                        {item.is_active !== undefined ? (
+                                            <button
+                                                className="btn-icon"
+                                                style={{ color: item.is_active ? '#22c55e' : '#9ca3af' }}
+                                                title={item.is_active ? 'Đang bật' : 'Đang tắt'}
+                                                onClick={() => handleToggleActive(item)}
+                                            >
+                                                {item.is_active ? <CheckCircle size={18} /> : <XCircle size={18} />}
+                                            </button>
+                                        ) : null}
+                                    </td>
                                     <td>
                                         <div className="action-buttons">
                                             <button className="btn-icon edit" onClick={() => handleOpenModal(item)}>

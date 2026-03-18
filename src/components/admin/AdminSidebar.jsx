@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Activity, Image as ImageIcon, LogOut, Users, Video, Headphones } from 'lucide-react';
+import { LayoutDashboard, FileText, Activity, Image as ImageIcon, LogOut, Users, Video, Headphones, Layers, ClipboardList } from 'lucide-react';
 
 const AdminSidebar = ({ activeTab, setActiveTab }) => {
     return (
@@ -28,6 +28,12 @@ const AdminSidebar = ({ activeTab, setActiveTab }) => {
                 </button>
                 <button className={`nav-item ${activeTab === 'documents' ? 'active' : ''}`} onClick={() => setActiveTab('documents')}>
                     <FileText size={20} /> Văn bản chỉ đạo
+                </button>
+                <button className={`nav-item ${activeTab === 'activities' ? 'active' : ''}`} onClick={() => setActiveTab('activities')}>
+                    <Layers size={20} /> Hoạt động
+                </button>
+                <button className={`nav-item ${activeTab === 'receipts' ? 'active' : ''}`} onClick={() => setActiveTab('receipts')}>
+                    <ClipboardList size={20} /> Phiếu tiếp nhận
                 </button>
                 <button className={`nav-item ${activeTab === 'committee' ? 'active' : ''}`} onClick={() => setActiveTab('committee')}>
                     <Activity size={20} /> Ban quản trị

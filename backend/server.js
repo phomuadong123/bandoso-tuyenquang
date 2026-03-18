@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Setup Multer for file uploads
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Docker volume maps ./public/images to /app/public/images in backend container
@@ -58,26 +58,6 @@ app.post('/api/upload-file', uploadFile.single('file'), (req, res) => {
   }
 });
 
-// Lấy dữ liệu video/audio cho SidebarMedia
-app.get('/api/videos', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM videos ORDER BY id DESC');
-    console.log(rows);
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/audios', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM audios ORDER BY id DESC');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // 1. Lấy thống kê chung
 app.get('/api/statistics', async (req, res) => {
   try {
@@ -93,72 +73,46 @@ app.get('/api/statistics', async (req, res) => {
   }
 });
 
-// 2. Lấy danh sách tin tức
-app.get('/api/news', async (req, res) => {
+const getData = (table, orderBy) => async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM news ORDER BY date DESC');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    const isAdmin = req.query.admin === 'true';
 
-// 3. Lấy văn bản chỉ đạo
-app.get('/api/documents', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM documents ORDER BY date DESC');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+    let query = `SELECT * FROM ${table}`;
+    if (!isAdmin) {
+      query += ' WHERE is_active = 1';
+    }
+    query += ` ORDER BY ${orderBy}`;
 
-// 4. Lấy Ban phong trào
-app.get('/api/committee', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM committee');
+    const [rows] = await pool.query(query);
     res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
-// 5. Lấy danh sách địa điểm bản đồ
-app.get('/api/locations', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM locations');
-    // Map data for client
-    const locations = rows.map(r => ({
-      id: r.id,
-      name: r.name,
-      coords: { lat: parseFloat(r.lat), lng: parseFloat(r.lng) },
-      secretary: r.secretary,
-      phone: r.phone,
-      needs: r.needs,
-      status: r.status,
-      image: r.image
-    }));
-    res.json(locations);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+};
+app.get('/api/documents', getData('documents', 'date DESC'));
+app.get('/api/news', getData('news', 'date DESC'));
+app.get('/api/videos', getData('videos', 'id DESC'));
+app.get('/api/audios', getData('audios', 'id DESC'));
+app.get('/api/committee', getData('committee', 'id DESC'));
+app.get('/api/activities', getData('activities', 'id DESC'));
+
 
 // --- CRUD CHO TIN TỨC (NEWS) ---
 app.post('/api/news', async (req, res) => {
-  const { title, image, date } = req.body;
+  const { title, image, date, is_active = 0 } = req.body;
   try {
-    const [result] = await pool.query('INSERT INTO news (title, image, date) VALUES (?, ?, ?)', [title, image, date]);
-    res.json({ id: result.insertId, title, image, date });
+    const [result] = await pool.query('INSERT INTO news (title, image, date, is_active) VALUES (?, ?, ?, ?)', [title, image, date, is_active]);
+    res.json({ id: result.insertId, title, image, date, is_active });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 app.put('/api/news/:id', async (req, res) => {
-  const { title, image, date } = req.body;
+  const { title, image, date, is_active } = req.body;
   try {
-    await pool.query('UPDATE news SET title = ?, image = ?, date = ? WHERE id = ?', [title, image, date, req.params.id]);
+    await pool.query('UPDATE news SET title = ?, image = ?, date = ?, is_active = ? WHERE id = ?', [title, image, date, is_active, req.params.id]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -176,22 +130,22 @@ app.delete('/api/news/:id', async (req, res) => {
 
 // --- CRUD CHO VĂN BẢN (DOCUMENTS) ---
 app.post('/api/documents', async (req, res) => {
-  const { id, number, excerpt, date, file_path } = req.body;
+  const { id, number, excerpt, date, file_path, is_active = 0 } = req.body;
   try {
-    await pool.query('INSERT INTO documents (id, number, excerpt, date, file_path) VALUES (?, ?, ?, ?, ?)', [id, number, excerpt, date, file_path]);
-    res.json({ id, number, excerpt, date, file_path });
+    await pool.query('INSERT INTO documents (id, number, excerpt, date, file_path, is_active) VALUES (?, ?, ?, ?, ?, ?)', [id, number, excerpt, date, file_path, is_active]);
+    res.json({ id, number, excerpt, date, file_path, is_active });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 app.put('/api/documents/:id(*)', async (req, res) => {
-  const { number, excerpt, date, file_path } = req.body;
+  const { number, excerpt, date, file_path, is_active } = req.body;
   try {
     if (file_path) {
-      await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ?, file_path = ? WHERE id = ?', [number, excerpt, date, file_path, req.params.id]);
+      await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ?, file_path = ?, is_active = ? WHERE id = ?', [number, excerpt, date, file_path, is_active, req.params.id]);
     } else {
-      await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ? WHERE id = ?', [number, excerpt, date, req.params.id]);
+      await pool.query('UPDATE documents SET number = ?, excerpt = ?, date = ?, is_active = ? WHERE id = ?', [number, excerpt, date, is_active, req.params.id]);
     }
     res.json({ success: true });
   } catch (error) {
@@ -208,21 +162,160 @@ app.delete('/api/documents/:id(*)', async (req, res) => {
   }
 });
 
+// --- CRUD CHO ACTIVITIES ---
+
+app.post('/api/activities', async (req, res) => {
+  const { name, type, note, is_active = 0 } = req.body;
+  try {
+    const [result] = await pool.query('INSERT INTO activities (name, type, note, is_active) VALUES (?, ?, ?, ?)', [name, type, note, is_active]);
+    res.json({ id: result.insertId, name, type, note, is_active });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/activities/:id', async (req, res) => {
+  const { name, type, note, is_active } = req.body;
+  try {
+    await pool.query('UPDATE activities SET name = ?, type = ?, note = ?, is_active = ? WHERE id = ?', [name, type, note, is_active, req.params.id]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/activities/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM activities WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// --- CRUD CHO RECEIPTS ---
+app.get('/api/receipts', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT r.*, a.name as activity_name, COALESCE(SUM(ri.total_value),0) as total_value
+       FROM receipts r
+       LEFT JOIN activities a ON a.id = r.activity_id
+       LEFT JOIN receipt_items ri ON ri.receipt_id = r.id
+       GROUP BY r.id
+       ORDER BY r.received_at DESC`
+    );
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/receipts/:id', async (req, res) => {
+  try {
+    const [receiptRows] = await pool.query('SELECT * FROM receipts WHERE id = ?', [req.params.id]);
+    if (receiptRows.length === 0) return res.status(404).json({ error: 'Not found' });
+
+    const receipt = receiptRows[0];
+    const [items] = await pool.query('SELECT * FROM receipt_items WHERE receipt_id = ?', [req.params.id]);
+
+    res.json({ ...receipt, items });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/receipts', async (req, res) => {
+  const { activity_id, donor_name, donor_type, location_name, received_at, note, items, is_active = 0 } = req.body;
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO receipts (activity_id, donor_name, donor_type, location_name, received_at, note, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [activity_id, donor_name, donor_type, location_name, received_at, note, is_active]
+    );
+
+    const receiptId = result.insertId;
+    if (Array.isArray(items)) {
+      const itemRows = items.map(item => [
+        receiptId,
+        item.item_name,
+        item.unit,
+        item.quantity || 0,
+        item.unit_price || 0,
+        (item.quantity || 0) * (item.unit_price || 0),
+        item.note || ''
+      ]);
+      if (itemRows.length > 0) {
+        await pool.query(
+          'INSERT INTO receipt_items (receipt_id, item_name, unit, quantity, unit_price, total_value, note) VALUES ?',
+          [itemRows]
+        );
+      }
+    }
+
+    res.json({ success: true, id: receiptId });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/receipts/:id', async (req, res) => {
+  const { activity_id, donor_name, donor_type, location_name, received_at, note, items, is_active } = req.body;
+  try {
+    await pool.query(
+      'UPDATE receipts SET activity_id = ?, donor_name = ?, donor_type = ?, location_name = ?, received_at = ?, note = ?, is_active = ? WHERE id = ?',
+      [activity_id, donor_name, donor_type, location_name, received_at, note, is_active, req.params.id]
+    );
+
+    // Replace items
+    await pool.query('DELETE FROM receipt_items WHERE receipt_id = ?', [req.params.id]);
+
+    if (Array.isArray(items) && items.length > 0) {
+      const itemRows = items.map(item => [
+        req.params.id,
+        item.item_name,
+        item.unit,
+        item.quantity || 0,
+        item.unit_price || 0,
+        (item.quantity || 0) * (item.unit_price || 0),
+        item.note || ''
+      ]);
+
+      await pool.query(
+        'INSERT INTO receipt_items (receipt_id, item_name, unit, quantity, unit_price, total_value, note) VALUES ?',
+        [itemRows]
+      );
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/receipts/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM receipt_items WHERE receipt_id = ?', [req.params.id]);
+    await pool.query('DELETE FROM receipts WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- CRUD CHO BAN PHONG TRÀO (COMMITTEE) ---
 app.post('/api/committee', async (req, res) => {
-  const { name, role, phone, avatar, unit } = req.body;
+  const { name, role, phone, avatar, unit, is_active = 0 } = req.body;
   try {
-    const [result] = await pool.query('INSERT INTO committee (name, role, phone, avatar, unit) VALUES (?, ?, ?, ?, ?)', [name, role, phone, avatar, unit]);
-    res.json({ id: result.insertId, name, role, phone, avatar, unit });
+    const [result] = await pool.query('INSERT INTO committee (name, role, phone, avatar, unit, is_active) VALUES (?, ?, ?, ?, ?, ?)', [name, role, phone, avatar, unit, is_active]);
+    res.json({ id: result.insertId, name, role, phone, avatar, unit, is_active });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 app.put('/api/committee/:id', async (req, res) => {
-  const { name, role, phone, avatar, unit } = req.body;
+  const { name, role, phone, avatar, unit, is_active } = req.body;
   try {
-    await pool.query('UPDATE committee SET name = ?, role = ?, phone = ?, avatar = ?, unit = ? WHERE id = ?', [name, role, phone, avatar, unit, req.params.id]);
+    await pool.query('UPDATE committee SET name = ?, role = ?, phone = ?, avatar = ?, unit = ?, is_active = ? WHERE id = ?', [name, role, phone, avatar, unit, is_active, req.params.id]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -240,19 +333,19 @@ app.delete('/api/committee/:id', async (req, res) => {
 
 // --- CRUD CHO VIDEOS ---
 app.post('/api/videos', async (req, res) => {
-  const { title, url } = req.body;
+  const { title, url, is_active = 0 } = req.body;
   try {
-    const [result] = await pool.query('INSERT INTO videos (title, url) VALUES (?, ?)', [title, url]);
-    res.json({ id: result.insertId, title, url });
+    const [result] = await pool.query('INSERT INTO videos (title, url, is_active) VALUES (?, ?, ?)', [title, url, is_active]);
+    res.json({ id: result.insertId, title, url, is_active });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 app.put('/api/videos/:id', async (req, res) => {
-  const { title, url } = req.body;
+  const { title, url, is_active } = req.body;
   try {
-    await pool.query('UPDATE videos SET title = ?, url = ? WHERE id = ?', [title, url, req.params.id]);
+    await pool.query('UPDATE videos SET title = ?, url = ?, is_active = ? WHERE id = ?', [title, url, is_active, req.params.id]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -270,19 +363,19 @@ app.delete('/api/videos/:id', async (req, res) => {
 
 // --- CRUD CHO AUDIOS ---
 app.post('/api/audios', async (req, res) => {
-  const { title, url } = req.body;
+  const { title, url, is_active = 0 } = req.body;
   try {
-    const [result] = await pool.query('INSERT INTO audios (title, url) VALUES (?, ?)', [title, url]);
-    res.json({ id: result.insertId, title, url });
+    const [result] = await pool.query('INSERT INTO audios (title, url, is_active) VALUES (?, ?, ?)', [title, url, is_active]);
+    res.json({ id: result.insertId, title, url, is_active });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 app.put('/api/audios/:id', async (req, res) => {
-  const { title, url } = req.body;
+  const { title, url, is_active } = req.body;
   try {
-    await pool.query('UPDATE audios SET title = ?, url = ? WHERE id = ?', [title, url, req.params.id]);
+    await pool.query('UPDATE audios SET title = ?, url = ?, is_active = ? WHERE id = ?', [title, url, is_active, req.params.id]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -302,7 +395,7 @@ app.delete('/api/audios/:id', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   try {
-    const [rows] = await pool.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password]);
+    const [rows] = await pool.query('SELECT * FROM users WHERE username = ? AND password = ? ', [username, password]);
     if (rows.length > 0) {
       res.json({ success: true, user: { id: rows[0].id, username: rows[0].username, role: rows[0].role } });
     } else {
@@ -316,7 +409,7 @@ app.post('/api/login', async (req, res) => {
 // --- CRUD CHO NGƯỜI DÙNG (USERS) ---
 app.get('/api/users', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT id, username, role FROM users'); // Loại bỏ trả về password
+    const [rows] = await pool.query('SELECT id, username, role, is_active FROM users '); 
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -324,22 +417,22 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.post('/api/users', async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, role, is_active = 0 } = req.body;
   try {
-    const [result] = await pool.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, password, role]);
-    res.json({ id: result.insertId, username, role });
+    const [result] = await pool.query('INSERT INTO users (username, password, role, is_active) VALUES (?, ?, ?, ?)', [username, password, role, is_active]);
+    res.json({ id: result.insertId, username, role, is_active });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 app.put('/api/users/:id', async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, role, is_active } = req.body;
   try {
     if (password) { // Nếu có nhập password mới thì cập nhật
-        await pool.query('UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?', [username, password, role, req.params.id]);
+        await pool.query('UPDATE users SET username = ?, password = ?, role = ?, is_active = ? WHERE id = ?', [username, password, role, is_active, req.params.id]);
     } else {
-        await pool.query('UPDATE users SET username = ?, role = ? WHERE id = ?', [username, role, req.params.id]);
+        await pool.query('UPDATE users SET username = ?, role = ?, is_active = ? WHERE id = ?', [username, role, is_active, req.params.id]);
     }
     res.json({ success: true });
   } catch (error) {

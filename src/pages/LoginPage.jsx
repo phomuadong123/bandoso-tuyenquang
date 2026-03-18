@@ -23,16 +23,19 @@ const LoginPage = () => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 if (data.user.role === 'admin') {
                     navigate('/admin');
+                    toast.success("Đăng nhập thành công!");
                 } else {
-                    alert('Xin lỗi, chỉ có Admin mới được vào trang quản trị.');
-                    navigate('/'); // Có thể chuyển hướng Guest về trang chủ
+                    toast.error("Xin lỗi, chỉ có Admin mới được vào trang quản trị.");
+                    navigate('/');
                 }
             } else {
                 setError(data.message || 'Đăng nhập thất bại');
+                toast.error("Đăng nhập thất bại!");
             }
         } catch (err) {
             console.error(err);
             setError('Lỗi kết nối tới Server');
+            toast.error("Lỗi kết nối tới Server");
         }
     };
 

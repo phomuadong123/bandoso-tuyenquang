@@ -3,6 +3,8 @@ import '../styles/admin.css';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 import CrudTable from '../components/admin/CrudTable';
+import ActivitiesManager from '../components/admin/ActivitiesManager';
+import ReceiptsManager from '../components/admin/ReceiptsManager';
 
 const AdminPage = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -99,7 +101,9 @@ const AdminPage = () => {
                                 activeTab === 'videos' ? 'Quản lý Video Tuyên truyền' :
                                     activeTab === 'audios' ? 'Quản lý Audio / Podcast' :
                                         activeTab === 'documents' ? 'Quản lý Văn bản chỉ đạo' :
-                                            'Quản lý Ban quản trị & Kết quả'
+                                            activeTab === 'activities' ? 'Quản lý Hoạt động' :
+                                                activeTab === 'receipts' ? 'Quản lý Phiếu tiếp nhận' :
+                                                    'Quản lý Ban quản trị & Kết quả'
                 } />
 
                 <div className="admin-content glass-panel">
@@ -163,6 +167,14 @@ const AdminPage = () => {
                             columns={userColumns}
                             formFields={userFields}
                         />
+                    )}
+
+                    {activeTab === 'activities' && (
+                        <ActivitiesManager />
+                    )}
+
+                    {activeTab === 'receipts' && (
+                        <ReceiptsManager />
                     )}
 
                     {activeTab === 'committee' && (
