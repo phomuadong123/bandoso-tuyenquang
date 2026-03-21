@@ -11,7 +11,7 @@ const ActivitiesManager = () => {
 
   const fields = [
     { key: 'name', label: 'Tên hoạt động' },
-    { key: 'type', label: 'Loại (model/location/program)' },
+    { key: 'type', label: 'Loại (Chương trình/Hoạt động/Mô hình...)' },
     { key: 'note', label: 'Ghi chú', type: 'textarea', required: false }
   ];
 

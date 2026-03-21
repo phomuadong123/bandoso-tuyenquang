@@ -192,7 +192,7 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
                                         {item.is_active !== undefined ? (
                                             <button
                                                 className="btn-icon"
-                                                style={{ color: item.is_active ? '#22c55e' : '#9ca3af' }}
+                                                style={{ color: item.is_active ? '#05a03e' : '#d11212' }}
                                                 title={item.is_active ? 'Đang bật' : 'Đang tắt'}
                                                 onClick={() => handleToggleActive(item)}
                                             >

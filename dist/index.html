@@ -1,17 +1,166 @@
 <!doctype html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bản đồ số tình nguyện Tuyên Quang</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-BGBPJYRH.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BMCD_Vs8.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <div id="portal-root"></div>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bản đồ số tình nguyện Tuyên Quang</title>
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Outfit:wght@500;700&display=swap"
+    rel="stylesheet">
+  <script type="module" crossorigin src="/assets/index-RuAv5h-m.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D67nxv6v.css">
+</head>
+
+<body>
+  <script>
+    function create_UUID() {
+      var sender = localStorage.getItem("sb_sender_name");
+      var uuid = "";
+      var dt = new Date().getTime();
+      if (sender) {
+        uuid = sender;
+      } else {
+        uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          var r = (dt + Math.random() * 16) % 16 | 0;
+          dt = Math.floor(dt / 16);
+          return (c == "x" ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        try {
+          localStorage.setItem("sb_sender_name", uuid);
+        }
+        catch (err) {
+          console.log("error", err);
+        }
+      }
+      return uuid;
+    }
+    let __protocol = document.location.protocol;
+    let __baseUrl = __protocol + "//livechat.vnpt.vn";
+    let prefixNameLiveChat = "";
+    let objPreDefineLiveChat = {
+      appCode: 'd3bc1d20-2268-11f1-99dd-0b53b33b69f8',
+      themes: "",
+      appName: {
+        line1: 'Trợ lý ảo AI',
+        line2: 'Tỉnh đoàn Tuyên Quang'
+      },
+      thumb: '',
+      typeIcon: 'static',
+      logoDynamic: '/static/media/botgif.758c0cd9.gif',
+      icon_bot: 'https://storage-smartbot.vnpt.vn/smartbot-v2/chatbot_images/3182026/6d0a298c-1fb8-433c-bc0d-408480e0632e.png',
+      icon_expand: '',
+      icon_close: '',
+      logo_button: 'https://storage-smartbot.vnpt.vn/smartbot-v2/chatbot_images/3182026/e27c514b-2757-4c82-81c4-5aeec3cfcea7.png',
+      colorIcon: {
+        colorType: 'linear',
+        colorVoteIcon: '#e01013',
+        colorExpand: '#FFFFFF',
+        colorClose: '#ffffff',
+        colorFrom: '#278eff',
+        colorTo: '#0667e1',
+        colorSend: '#278eff',
+        colorMic: '#278eff',
+      },
+      greeting: '',
+      greeting_message: '',
+      senderName: create_UUID(),
+      expireSession: true,
+      botMetadata: localStorage.getItem('bot_metadata'),
+      username: localStorage.getItem('sb_username'),
+      isSaveHistory: true,
+      timeOpenUrl: 2000,
+      autoOpen: true,
+      timeAutoOpen: 5000,
+      isTyping: true,
+      timeTyping: 3000,
+      isSuggestions: true,
+      typeStt: 'stream',
+      domainReferences: '',
+      isVoting: true,
+      styles: {
+        head: {
+          bgColor: '#0667e1',
+          text: {
+            line: 2,
+            line1: {
+              color: '#fff',
+              fontSize: '20px',
+              fontWeight: 400
+            },
+            line2: {
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: 400
+            }
+          }
+        },
+        border: {
+        },
+        floatButton: {
+          bgColor: '#fff',
+          icon: 'https://storage-smartbot.vnpt.vn/smartbot-v2/chatbot_images/3182026/e27c514b-2757-4c82-81c4-5aeec3cfcea7.png',
+          width: 62,
+          height: 62,
+          img: {
+            width: '51.6%'
+          }
+        },
+        chat: {
+          bg: '#F3F6F6',
+          button: {
+            bg: '#0e71e8',
+            color: '#fff'
+          },
+          answer: {
+            bg: '#ffffff',
+            color: '#1f1f1f',
+            fontSize: '14px',
+          },
+          question: {
+            bg: '#0e71e8',
+            color: '#fff',
+            fontSize: '14px',
+          },
+          botIcon: 'https://storage-smartbot.vnpt.vn/smartbot-v2/chatbot_images/3182026/449bfd07-cbc2-43fb-b484-3bb4cb85cd61.png'
+        },
+        greeting: {
+          backgroundColor: '#ffffff',
+          title: {
+            color: '#000000',
+            fontWeight: 700,
+            fontSize: '14px'
+          },
+          message: {
+            color: '#545454',
+            fontSize: '14px',
+            fontWeight: 400
+          }
+        }
+      }
+    },
+      appCodeHash = window.location.hash.substr(1);
+    if (appCodeHash.length == 32) {
+      objPreDefineLiveChat.appCode = + appCodeHash;
+    }
+    let vnpt_ai_livechat_script = document.createElement("script");
+    vnpt_ai_livechat_script.id = "vnpt_ai_livechat_script";
+    vnpt_ai_livechat_script.src = __baseUrl + "/vnpt_smartbot_ver2.js";
+    document.body.appendChild(vnpt_ai_livechat_script);
+    let vnpt_ai_livechat_stylesheet = document.createElement("link");
+    vnpt_ai_livechat_stylesheet.id = "vnpt_ai_livechat_script";
+    vnpt_ai_livechat_stylesheet.rel = "stylesheet";
+    vnpt_ai_livechat_stylesheet.href = __baseUrl + "/vnpt_smartbot_ver2.css";
+    document.body.appendChild(vnpt_ai_livechat_stylesheet);
+    vnpt_ai_livechat_script.onload = function () {
+      vnpt_ai_render_chatbox(objPreDefineLiveChat, __baseUrl, "livechat.vnpt.ai:443")
+    }
+  </script>
+  <div id="root"></div>
+  <div id="portal-root"></div>
+</body>
+
 </html>

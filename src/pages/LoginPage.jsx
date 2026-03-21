@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/admin.css';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');

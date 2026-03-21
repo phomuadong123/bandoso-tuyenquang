@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { createPortal } from "react-dom";
+import { toast } from 'react-toastify';
 
 const EMPTY_ITEM = { item_name: '', unit: '', quantity: 0, unit_price: 0, note: '' };
 const portalNode = typeof document !== 'undefined' ? document.getElementById('portal-root') : null;
@@ -65,6 +66,7 @@ const ReceiptsManager = () => {
         donor_type: data.donor_type || 'individual',
         activity_id: data.activity_id || '',
         location_name: data.location_name || '',
+        number_of_support: data.number_of_support || '',
         received_at: data.received_at ? data.received_at.slice(0, 16) : new Date().toISOString().slice(0, 16),
         note: data.note || '',
         items: Array.isArray(data.items) && data.items.length > 0 ? data.items.map(i => ({
@@ -87,6 +89,7 @@ const ReceiptsManager = () => {
   };
 
   const handleFieldChange = (key, value) => {
+    console.log(key, value);
     setForm(prev => ({ ...prev, [key]: value }));
   };
 
@@ -124,6 +127,7 @@ const ReceiptsManager = () => {
       activity_id: form.activity_id || null,
       location_name: form.location_name,
       received_at: form.received_at,
+      number_of_support: Number(form.number_of_support) || 0,
       note: form.note,
       items: form.items.map(i => ({
         item_name: i.item_name,
@@ -145,13 +149,14 @@ const ReceiptsManager = () => {
       if (res.ok) {
         await loadData();
         closeModal();
+        toast.success('Lưu phiếu thành công');
       } else {
         const err = await res.json();
-        alert(err?.error || 'Lưu không thành công');
+        toast.error(err?.error || 'Lưu không thành công');
       }
     } catch (e) {
       console.error(e);
-      alert('Lỗi khi lưu');
+      toast.error('Lỗi khi lưu');
     }
   };
 
@@ -161,9 +166,11 @@ const ReceiptsManager = () => {
       const res = await fetch(`/api/receipts/${encodeURIComponent(id)}`, { method: 'DELETE' });
       if (res.ok) {
         await loadData();
+        toast.success('Xóa phiếu thành công');
       }
     } catch (e) {
       console.error(e);
+      toast.error('Lỗi khi xóa');
     }
   };
 
@@ -304,6 +311,15 @@ const ReceiptsManager = () => {
                     className="form-input"
                     value={form.received_at}
                     onChange={e => handleFieldChange('received_at', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Số lượng hỗ trợ</label>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={form.number_of_support}
+                    onChange={e => handleFieldChange('number_of_support', e.target.value)}
                   />
                 </div>
                 <div className="form-group" style={{ gridColumn: 'span 2' }}>

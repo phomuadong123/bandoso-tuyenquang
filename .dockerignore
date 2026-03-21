@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# Build output
+dist/
+build/
+
+# Environment files (KHÔNG được docker copy vào image)
+.env
+.env.local
+.env.production
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose*.yml
+Dockerfile
+
+# Logs
+logs/
+*.log
+
+# Public uploads (mounted via volume, không cần copy vào image)
+public/images/
+public/uploads/

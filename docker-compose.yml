@@ -4,43 +4,61 @@ services:
   db:
     image: mysql:8.0
     container_name: bandoso_db
-    restart: always
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password123
-      MYSQL_DATABASE: bandoso_tq
-    ports:
-      - "3307:3306"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    # ports:
+    #   - "3307:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+    networks:
+      - bandoso_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   backend:
-    build: 
+    build:
       context: ./backend
     container_name: bandoso_backend
-    restart: always
+    restart: unless-stopped
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=password123
-      - DB_NAME=bandoso_tq
-      - PORT=3000
-    ports:
-      - "3000:3000"
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
     volumes:
       - ./public:/app/public
+    networks:
+      - bandoso_net
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build:
       context: .
     container_name: bandoso_frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
+    networks:
+      - bandoso_net
     depends_on:
       - backend
+
+networks:
+  bandoso_net:
+    driver: bridge
 
 volumes:
   db_data:

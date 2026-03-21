@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/admin.css';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
@@ -89,6 +89,33 @@ const AdminPage = () => {
         { key: 'url', label: 'File Âm thanh (.mp3)', type: 'file' }
     ];
 
+    const [statistics, setStatistics] = useState({
+        totalUsers: 0,
+        fundItemsValue: 0
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch('/api/dashboard');
+
+                if (!res.ok) {
+                    console.log("API Error:", await res.text());
+                    return;
+                }
+
+                const data = await res.json();
+                console.log("Dashboard data:", data);
+                setStatistics(data);
+
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className="admin-layout">
             <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -111,7 +138,7 @@ const AdminPage = () => {
                         <div className="dashboard-stats">
                             <div className="stat-card">
                                 <h4>Tổng số người dùng</h4>
-                                <h2>1</h2>
+                                <h2>{statistics.totalUsers || 0}</h2>
                             </div>
                             <div className="stat-card">
                                 <h4>Lượt truy cập hôm nay</h4>
@@ -119,7 +146,7 @@ const AdminPage = () => {
                             </div>
                             <div className="stat-card">
                                 <h4>Quỹ đóng góp mới</h4>
-                                <h2>1xxM VNĐ</h2>
+                                <h2>{statistics.fundItemsValue?.toLocaleString() || 0} VNĐ</h2>
                             </div>
                         </div>
                     )}

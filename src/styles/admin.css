@@ -172,9 +172,16 @@
 
 .data-table th,
 .data-table td {
-    padding: 16px;
+    padding: 10px;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer{
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
 }
 
 .data-table th {

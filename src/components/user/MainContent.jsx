@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Users, CheckCircle, ChevronRight } from 'lucide-react';
 import MapComponent from './MapComponent';
 import CustomMapSearch from './MapComponent';
+import CardSlider from './CardSlider';
 
 const MainContent = () => {
     const [locations, setLocations] = useState([]);
     const [committee, setCommittee] = useState([]);
-    const [statistics, setStatistics] = useState({});
+    const [statistics, setStatistics] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState(null);
 
     useEffect(() => {
@@ -15,7 +16,7 @@ const MainContent = () => {
                 const [locRes, committeeRes, statsRes] = await Promise.all([
                     fetch('/api/locations'),
                     fetch('/api/committee'),
-                    fetch('/api/statistics')
+                    fetch('/api/activities/support-summary')
                 ]);
 
                 if (locRes.ok) setLocations(await locRes.json());
@@ -28,6 +29,25 @@ const MainContent = () => {
 
         fetchData();
     }, []);
+
+    const formatVietnameseDate = (dateInput) => {
+        const date = new Date(dateInput);
+
+        const datePart = new Intl.DateTimeFormat("vi-VN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }).format(date);
+
+        // Lấy giờ và phút
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+
+        const period = hours >= 12 ? "chiều" : "sáng";
+        hours = hours % 12 || 12;
+
+        return `${datePart} ${hours}:${minutes} ${period}`;
+    };
 
     const handleMarkerClick = (loc) => {
         setSelectedLocation(loc);
@@ -65,7 +85,7 @@ const MainContent = () => {
 
             {/* KHU VỰC BẢN ĐỒ VÀ MÔ TẢ */}
             <div className="map-section glass-panel" style={{ marginBottom: '20px' }} id="ban-do">
-                <h3 className="section-title"  style={{ marginBottom: '0' }}>Bản Đồ Số Tình Nguyện (Điểm Tiếp Nhận Kết Nối Tình Nguyện)</h3>
+                <h3 className="section-title" style={{ marginBottom: '0' }}>Bản Đồ Số Tình Nguyện (Điểm Tiếp Nhận Kết Nối Tình Nguyện)</h3>
                 <p className="section-description">Danh sách các địa điểm, thông tin kết nối, tiếp nhận nguồn lực tổ chức các hoạt động tình nguyện do các cấp bộ Đoàn làm đầu mối</p>
 
                 <div className="map-container">
@@ -85,10 +105,10 @@ const MainContent = () => {
                         <div class="marquee-container">
                             <div class="marquee-content">
                                 <span>
-                               Tỉnh đoàn - Hội LHTN - Hội đồng đội Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Tỉnh Tuyên Quang . Điện thoại: 0207 3822 666 
+                                    Tỉnh đoàn - Hội LHTN - Hội đồng đội Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Tỉnh Tuyên Quang . Điện thoại: 0207 3822 666
                                 </span>
                                 <span>
-                               Tỉnh đoàn - Hội LHTN - Hội đồng đội Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Tỉnh Tuyên Quang . Điện thoại: 0207 3822 666 
+                                    Tỉnh đoàn - Hội LHTN - Hội đồng đội Việt Nam tỉnh Tuyên Quang rất mong được tiếp đón nhận sự ủng hộ của các tổ chức, cá nhân, nhà hảo tâm để cùng chung tay hỗ trợ các địa phương trong tỉnh thực hiện tốt công tác an sinh xã hội, chăm lo cho người nghèo, người có hoàn cảnh khó khăn trên địa bàn tỉnh. Mọi sự ủng hộ xin gửi về: Tỉnh đoàn - Hội LHTN Việt Nam tỉnh Tuyên Quang, Địa chỉ: Đường 17/8, Phường Minh Xuân - Tỉnh Tuyên Quang . Điện thoại: 0207 3822 666
                                 </span>
                             </div>
                         </div>
@@ -104,8 +124,9 @@ const MainContent = () => {
                         <div className="legend-item"><img src="/images/ngoi-nha.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà hạnh phúc</span></div>
                         <div className="legend-item"><img src="/images/ngoi-nha-yeu-thuong.png" alt="Đang cần hỗ trợ" /> <span>Ngôi nhà yêu thương</span></div>
                         <div className="legend-item"><img src="/images/cong-trinh.png" alt="Công trìnhh" /> <span>Công trình thắp sáng đường quê</span></div>
+                        <div className="legend-item"><img src="/images/truong-hoc.png" alt="Công trìnhh" /> <span>Trường đẹp cho em</span></div>
                     </div>
-                        <button className="legend-next" onClick={() => nextLegend()}> <ChevronRight /> </button>
+                    <button className="legend-next" onClick={() => nextLegend()}> <ChevronRight /> </button>
 
                 </div>
             </div>
@@ -117,7 +138,7 @@ const MainContent = () => {
                     <div className="committee-list">
                         {committee.map((member, idx) => (
                             <div className="committee-card hover-lift" key={idx}>
-                                <img src={member.avatar} style={{width: 200, height: 200 }} alt={member.name} className="c-avatar" />
+                                <img src={member.avatar} style={{ width: 200, height: 200 }} alt={member.name} className="c-avatar" />
                                 <div className="c-info">
                                     <h4 className="c-name">{member.name}</h4>
                                     <span className="c-role">{member.role}</span>
@@ -134,89 +155,88 @@ const MainContent = () => {
                 {/* Kết quả Tình nguyện */}
                 <div className="stats-section glass-panel" id="thong-tin">
                     <h3 className="section-title"><ActivityIcon /> Kết quả các hoạt động</h3>
-                   <div className="report-container">
-                    {/* Tiêu đề và Thời gian */}
-                    <div className="report-header">
-                        <h2 className="main-title">Kết quả tiếp nhận đến thời điểm</h2>
-                        <div className="timestamp-badge">
-                        4 Tháng ba, 2026 9:57 sáng
-                        </div>
-                    </div>
-
-                    <div className="report-content">
-                        {/* Khối MÔ HÌNH */}
-                        <div className="report-card">
-                        <div className="card-body">
-                            <div className="info-group main-info">
-                            <span className="badge-blue">MÔ HÌNH</span>
-                            <h4 className="item-name">Người em của Đoàn</h4>
+                    <div className="report-container">
+                        {/* Tiêu đề và Thời gian */}
+                        <div className="report-header">
+                            <h2 className="main-title">Kết quả tiếp nhận đến thời điểm</h2>
+                            <div className="timestamp-badge">
+                                {formatVietnameseDate(new Date())}
                             </div>
-                            
-                            <div className="info-group">
-                            <span className="info-label">Tổng giá trị tiếp nhận:</span>
-                            <span className="info-value">{statistics.totalValue ?? 'Đang tải...'}</span>
-                            </div>
-
-                            <div className="info-group">
-                            <span className="info-label">Số lượng em hỗ trợ:</span>
-                            <span className="info-value">{statistics.volunteersCount ?? 'Đang tải...'}</span>
-                            </div>
-
-                            <div className="info-group">
-                            <span className="info-label">Số hoạt động:</span>
-                            <span className="info-value">{statistics.activitiesCount ?? 'Đang tải...'}</span>
-                            </div>
-                        </div>
-                        <div className="card-arrow">
-                        </div>
                         </div>
 
-                        {/* Khối ĐỊA ĐIỂM */}
-                        <div className="report-card">
-                        <div className="card-body">
-                            <div className="info-group main-info">
-                            <span className="badge-blue">ĐỊA ĐIỂM</span>
-                            <h4 className="item-name">Tiếp nhận nguồn lực hỗ trợ</h4>
-                            </div>
-                            
-                            <div className="info-group">
-                            <span className="info-label">Số lượng điểm:</span>
-                            <span className="info-value">{locations.length || 'Đang tải...'}</span>
+                        <div className="report-content">
+                            {/* Khối MÔ HÌNH */}
+                            {/* <CardSlider data={statistics} /> */}
+                            <div className="report-card">
+                                <div className="card-body">
+                                    <div className="info-group main-info">
+                                        <span className="badge-blue">MÔ HÌNH</span>
+                                        <h4 className="item-name">Phụng dưỡng người già neo đơn</h4>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Số lượng hỗ trợ lâu dài:</span>
+                                        <span className="info-value">68</span>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Đã tiếp nhận (tổng trị giá):</span>
+                                        <span className="info-value">2.1 tỷ đồng</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="info-group">
-                            <span className="info-label">Số dự án/đơn vị:</span>
-                            <span className="info-value">{statistics.projectsCount ?? 'Đang tải...'}</span>
-                            </div>
-                        </div>
-                        <div className="card-arrow">
-                            
-                        </div>
-                        </div>
 
-                        {/* Khối MÔ HÌNH */}
-                        <div className="report-card">
-                        <div className="card-body">
-                            <div className="info-group main-info">
-                            <span className="badge-blue">MÔ HÌNH</span>
-                            <h4 className="item-name">Phụng dường người già neo đơn</h4>
-                            </div>
-                            
-                            <div className="info-group">
-                            <span className="info-label">Số lượng hỗ trợ lâu dài</span>
-                            <span className="info-value bold">{statistics.volunteersCount ?? 'Đang tải...'}</span>
+                            {/* Khối MÔ HÌNH */}
+                            <div className="report-card">
+                                <div className="card-body">
+                                    <div className="info-group main-info">
+                                        <span className="badge-blue">MÔ HÌNH</span>
+                                        <h4 className="item-name">Người em của Đoàn</h4>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Năm thành lập:</span>
+                                        <span className="info-value">2021</span>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Số lượng em hỗ trợ:</span>
+                                        <span className="info-value">210</span>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Trung bình mức hỗ trợ hàng tháng:</span>
+                                        <span className="info-value">200 nghìn - 2 triệu VND</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="info-group">
-                            <span className="info-label">Đã tiếp nhận (tổng trị giá):</span>
-                            <span className="info-value">{statistics.totalValue ?? 'Đang tải...'}</span>
+                            <div className="report-card">
+                                <div className="card-body">
+                                    <div className="info-group main-info">
+                                        <span className="badge-blue">ĐỊA ĐIỂM</span>
+                                        <h4 className="item-name">Tiếp nhận nguồn lực hỗ trợ</h4>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Quy mô tiếp nhận thực hiện:</span>
+                                        <span className="info-value">Cấp Xã</span>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Số lượng điểm:</span>
+                                        <span className="info-value">124 xã</span>
+                                    </div>
+
+                                    <div className="info-group">
+                                        <span className="info-label">Đã tiếp nhận trong năm 2023</span>
+                                        <span className="info-value">3.51 tỷ đồng</span>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
-                        <div className="card-arrow">
-                            
-                        </div>
-                        </div>
-                    </div>
                     </div>
                 </div>
 
