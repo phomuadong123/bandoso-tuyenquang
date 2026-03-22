@@ -157,8 +157,8 @@ const MainContent = () => {
                         {/* Chỉ hiển thị nút khi có nhiều hơn 4 thành viên */}
                         {committee.length > 4 && (
                             <>
-                                <button className="nav-btn left" onClick={() => scroll('left')}><ChevronLeft /></button>
-                                <button className="nav-btn right" onClick={() => scroll('right')}><ChevronRight /></button>
+                                <button className="nav-btn1 left" onClick={() => scroll('left')}><ChevronLeft /></button>
+                                <button className="nav-btn1 right" onClick={() => scroll('right')}><ChevronRight /></button>
                             </>
                         )}
 

@@ -1275,7 +1275,6 @@
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* Container bao quanh toàn bộ khu vực slider */
 .slider-container {
     position: relative;
     display: flex;
@@ -1307,17 +1306,13 @@
 
 /* Từng thẻ thành viên */
 .committee-card {
-    /* Hiển thị 4 card trên desktop (100% / 4 - gap) */
     flex: 0 0 calc(25% - 15px); 
-    min-width: 250px; /* Độ rộng tối thiểu để không bị nát layout */
+    min-width: 250px;
     background: white;
     border-radius: 12px;
     padding: 15px;
-    text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     transition: transform 0.3s ease;
-    
-    /* Điểm hít khi dừng cuộn */
     scroll-snap-align: start;
 }
 
@@ -1325,8 +1320,7 @@
     transform: translateY(-5px);
 }
 
-/* Style cho các nút điều hướng Left/Right */
-.nav-btn {
+.nav-btn1 {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -1350,22 +1344,22 @@
     transition: all 0.2s ease;
 }
 
-.nav-btn:hover {
+.nav-btn1:hover {
     background: #007bff; /* Màu xanh khi hover */
     color: white;
     box-shadow: 0 6px 15px rgba(0,123,255,0.3);
 }
 
-.nav-btn:active {
+.nav-btn1:active {
     transform: translateY(-50%) scale(0.9); /* Hiệu ứng nhấn nút */
 }
 
 /* Vị trí nút trái và phải */
-.nav-btn.left {
+.nav-btn1.left {
     left: -22.5px; /* Đẩy ra ngoài lề một nửa nút để trông tinh tế hơn */
 }
 
-.nav-btn.right {
+.nav-btn1.right {
     right: -22.5px;
 }
 
