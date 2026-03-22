@@ -71,11 +71,27 @@ const AdminPage = () => {
     const videoColumns = [
         { key: 'id', label: 'ID' },
         { key: 'title', label: 'Tiêu đề Video' },
-        { key: 'url', label: 'Link Embed (YouTube)' }
+        {
+            key: 'url',
+            label: 'Video MP4',
+            render: (val) => val ? (
+                <video controls style={{ width: 260, maxWidth: '100%', borderRadius: 6 }}>
+                    <source src={val} type="video/mp4" />
+                    Trình duyệt không hỗ trợ thẻ video.
+                </video>
+            ) : 'Chưa có video'
+        }
     ];
     const videoFields = [
         { key: 'title', label: 'Tiêu đề Video' },
-        { key: 'url', label: 'Link iframe YouTube (VD: https://www.youtube.com/embed/zJSfQxhg23c)' }
+        {
+            key: 'url',
+            label: 'File Video MP4',
+            type: 'file',
+            accept: '.mp4',
+            uploadEndpoint: '/api/upload-file',
+            uploadFieldName: 'file'
+        }
     ];
 
     // Cấu hình bảng Audio

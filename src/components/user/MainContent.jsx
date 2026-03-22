@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, Users, CheckCircle, ChevronRight } from 'lucide-react';
+import { Phone, Users, CheckCircle, ChevronRight, ChevronLeft } from 'lucide-react';
 import MapComponent from './MapComponent';
 import CustomMapSearch from './MapComponent';
 import CardSlider from './CardSlider';
@@ -80,6 +80,23 @@ const MainContent = () => {
         showLegend();
     }, []);
 
+    const scrollRef = useRef(null);
+
+    const scroll = (direction) => {
+        const container = scrollRef.current;
+        if (container) {
+            const firstCard = container.querySelector('.committee-card');
+            if (!firstCard) return;
+
+            const cardWidth = firstCard.offsetWidth + 20;
+
+            container.scrollBy({
+                left: direction === 'left' ? -cardWidth : cardWidth,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     return (
         <div className="main-content-area" >
 
@@ -133,19 +150,30 @@ const MainContent = () => {
 
             {/* THÔNG TIN KẾT QUẢ VÀ BAN PHONG TRÀO */}
             <div className="main-content-area" id="ban-phong-trao">
-                <div className="committee-section glass-panel" style={{ marginBottom: '20px' }} >
+                <div className="committee-section glass-panel" style={{ marginBottom: '20px' }}>
                     <h3 className="section-title"><Users /> Ban Quản Trị Tỉnh Đoàn</h3>
-                    <div className="committee-list">
-                        {committee.map((member, idx) => (
-                            <div className="committee-card hover-lift" key={idx}>
-                                <img src={member.avatar} style={{ width: 200, height: 200 }} alt={member.name} className="c-avatar" />
-                                <div className="c-info">
-                                    <h4 className="c-name">{member.name}</h4>
-                                    <span className="c-role">{member.role}</span>
-                                    <span className="c-phone"><Phone size={12} /> {member.phone}</span>
+
+                    <div className="slider-container">
+                        {/* Chỉ hiển thị nút khi có nhiều hơn 4 thành viên */}
+                        {committee.length > 4 && (
+                            <>
+                                <button className="nav-btn left" onClick={() => scroll('left')}><ChevronLeft /></button>
+                                <button className="nav-btn right" onClick={() => scroll('right')}><ChevronRight /></button>
+                            </>
+                        )}
+
+                        <div className="committee-list slider-mode" ref={scrollRef}>
+                            {committee.map((member, idx) => (
+                                <div className="committee-card hover-lift" key={idx}>
+                                    <img src={member.avatar} style={{ width: 200, height: 200 }} alt={member.name} className="c-avatar" />
+                                    <div className="c-info">
+                                        <h4 className="c-name">{member.name}</h4>
+                                        <span className="c-role">{member.role}</span>
+                                        <span className="c-phone"><Phone size={12} /> {member.phone}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

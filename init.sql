@@ -124,7 +124,7 @@ INSERT INTO news (title, image, date) VALUES
 ('Tuổi trẻ Tuyên Quang chung tay bảo vệ môi trường', '/images/news3.jpg', '15/03/2025');
 
 INSERT INTO videos (title, url) VALUES
-('Hành trình Tháng Thanh Niên 2025 tại Tuyên Quang', 'https://www.youtube.com/embed/zJSfQxhg23c');
+('Hành trình Tháng Thanh Niên 2025 tại Tuyên Quang', '/uploads/1774155727222-198805719.mp4');
 
 INSERT INTO audios (title, url) VALUES
 ('Thanh niên VN', '/images/1773738020337-471845361.mp3');
@@ -136,9 +136,10 @@ INSERT INTO documents (id, number, excerpt, date) VALUES
 
 INSERT INTO committee (name, role, phone, avatar, unit) VALUES
 ('Đ/c Hoàng Tường Vi', 'Phó bí thư tỉnh đoàn', '0942.167.235', '/images/dc-huong-tuong-vi.jpg', 'Tỉnh đoàn Tuyên Quang'),
-('Đ/c Lục Minh Hoài', 'Ban Phong trào', '0912.345.678', '/images/dc-luc-minh-hoai.jpg', 'Tỉnh đoàn Tuyên Quang'),
-('Đ/c Nguyễn Văn A', 'Ban Phong trào', '0912.345.678', '/images/dc-nguyen-thi-hau.jpg', 'Tỉnh đoàn Tuyên Quang'),
-('Đ/c Trần Thị B', 'Ban Phong trào', '0912.345.678', '/images/dc-nguyen-trung-kien.jpg', 'Tỉnh đoàn Tuyên Quang');
+('Đ/c Lục Minh Hoài', '	Chuyên viên Ban Phong trào Tỉnh đoàn', '0394.283.456', '/images/dc-luc-minh-hoai.jpg', 'Tỉnh đoàn Tuyên Quang'),
+('Đ/c Nguyễn Thị Hậu', 'Bí thư chi đoàn Sở Thông tin và truyền thông tỉnh', '098 5.614.741', '/images/dc-nguyen-thi-hau.jpg', 'Tỉnh đoàn Tuyên Quang'),
+('Đ/c Nguyễn Trung Kiên', 'Ban Phong trào', '0839.114.441', '/images/dc-nguyen-trung-kien.jpg', 'Tỉnh đoàn Tuyên Quang'),
+('Đ/c Ma Thị Gấm', 'Chuyên viên Ban Công tác Đoàn và Thanh thiếu nhi', '0912.345.678', '/images/1774154577330-644141141.jpg', 'Uỷ ban Mttq VN tỉnh Tuyên Quang');
  
 INSERT INTO bandoso_tq.activities (is_active,name,`type`,note) VALUES
 	 (1,'Giúp đỡ người già neo đơn','Mô Hình',''),

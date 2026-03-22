@@ -1275,6 +1275,116 @@
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+/* Container bao quanh toàn bộ khu vực slider */
+.slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* Danh sách chính - Chế độ Slider */
+.committee-list.slider-mode {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth; /* Cuộn mượt mà */
+    gap: 20px;
+    padding: 20px 5px;
+    
+    /* Ẩn thanh cuộn */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    
+    /* Hiệu ứng hít (Snap) - Quan trọng để card không dừng lửng lơ */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.committee-list.slider-mode::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Từng thẻ thành viên */
+.committee-card {
+    /* Hiển thị 4 card trên desktop (100% / 4 - gap) */
+    flex: 0 0 calc(25% - 15px); 
+    min-width: 250px; /* Độ rộng tối thiểu để không bị nát layout */
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    
+    /* Điểm hít khi dừng cuộn */
+    scroll-snap-align: start;
+}
+
+.committee-card.hover-lift:hover {
+    transform: translateY(-5px);
+}
+
+/* Style cho các nút điều hướng Left/Right */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    
+    /* Hình dáng nút */
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #eee;
+    color: #333;
+    
+    /* Căn giữa icon bên trong nút */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: #007bff; /* Màu xanh khi hover */
+    color: white;
+    box-shadow: 0 6px 15px rgba(0,123,255,0.3);
+}
+
+.nav-btn:active {
+    transform: translateY(-50%) scale(0.9); /* Hiệu ứng nhấn nút */
+}
+
+/* Vị trí nút trái và phải */
+.nav-btn.left {
+    left: -22.5px; /* Đẩy ra ngoài lề một nửa nút để trông tinh tế hơn */
+}
+
+.nav-btn.right {
+    right: -22.5px;
+}
+
+/* Responsive cho thiết kế di động/máy tính bảng */
+@media (max-width: 1024px) {
+    .committee-card {
+        flex: 0 0 calc(50% - 10px); /* Tablet hiện 2 card */
+    }
+    .nav-btn {
+        display: none; /* Mobile/Tablet dùng tay vuốt nên ẩn nút cho gọn */
+    }
+}
+
+@media (max-width: 600px) {
+    .committee-card {
+        flex: 0 0 85%; /* Mobile hiện 1 card rưỡi để người dùng biết là còn cuộn được */
+    }
+}
+
 .slide-out {
   transform: translateX(120%);
   opacity: 0;

@@ -12,7 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
 
 // Ensure upload directories exist so multer won't fail with ENOENT
 const imageDir = path.join(process.cwd(), "public", "images");
@@ -30,15 +31,41 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 500 * 1024 * 1024 } // 500MB
+});
 
-// Route Upload Image
-app.post("/api/upload", upload.single("image"), (req, res) => {
-  if (req.file) {
-    res.json({ url: "/images/" + req.file.filename });
-  } else {
-    res.status(400).json({ error: "Vui lòng chọn ảnh" });
-  }
+// Route Upload Image (vẫn hỗ trợ upload file nhị phân lớn)
+app.post("/api/upload", (req, res, next) => {
+  upload.single("image")(req, res, (err) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(413).json({ error: "Tệp quá lớn, cho phép tối đa 500MB" });
+      }
+      return next(err);
+    }
+
+    if (req.file) {
+      return res.json({ url: "/images/" + req.file.filename });
+    }
+
+    // Nếu không có image, thử upload bằng field file (cho mp4, mp3, ...)
+    upload.single("file")(req, res, (err2) => {
+      if (err2) {
+        if (err2.code === "LIMIT_FILE_SIZE") {
+          return res.status(413).json({ error: "Tệp quá lớn, cho phép tối đa 500MB" });
+        }
+        return next(err2);
+      }
+
+      if (req.file) {
+        return res.json({ url: "/uploads/" + req.file.filename });
+      }
+
+      res.status(400).json({ error: "Vui lòng chọn tệp" });
+    });
+  });
 });
 
 // Serve uploaded files (pdf/doc/audio/video/etc)
@@ -62,14 +89,23 @@ const fileStorage = multer.diskStorage({
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
-const uploadFile = multer({ storage: fileStorage });
+const uploadFile = multer({ storage: fileStorage, limits: { fileSize: 500 * 1024 * 1024 } });
 
-app.post("/api/upload-file", uploadFile.single("file"), (req, res) => {
-  if (req.file) {
-    res.json({ url: "/uploads/" + req.file.filename });
-  } else {
-    res.status(400).json({ error: "Vui lòng chọn tệp" });
-  }
+app.post("/api/upload-file", (req, res, next) => {
+  uploadFile.single("file")(req, res, (err) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(413).json({ error: "Tệp quá lớn, cho phép tối đa 500MB" });
+      }
+      return next(err);
+    }
+
+    if (req.file) {
+      res.json({ url: "/uploads/" + req.file.filename });
+    } else {
+      res.status(400).json({ error: "Vui lòng chọn tệp" });
+    }
+  });
 });
 
 app.get("/api/activities/support-summary", async (req, res) => {
