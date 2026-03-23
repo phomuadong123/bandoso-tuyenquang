@@ -9,6 +9,7 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [formData, setFormData] = useState({});
+    const [isUploading, setIsUploading] = useState(false);
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -61,6 +62,7 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
         if (!file) return;
         console.log(field);
         
+        setIsUploading(true);
 
         const fileData = new FormData();
         const uploadFieldName = field.uploadFieldName || 'image';
@@ -87,6 +89,8 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
         } catch (error) {
             console.error('Lỗi thông qua hệ thống upload:', error);
             toast.error("Tải lên tệp thất bại!");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -220,6 +224,12 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
             {isModalOpen && portalNode && createPortal(
                 <div className="modal-overlay">
                     <div className="modal-content glass-panel">
+                        {isUploading && (
+                            <div className="upload-backdrop">
+                                <div className="overlay-spinner" />
+                                <div className="overlay-text">Đang tải lên, xin chờ...</div>
+                            </div>
+                        )}
                         <div className="modal-header">
                             <h4>{editingItem ? 'Chỉnh sửa bản ghi' : 'Thêm mới bản ghi'}</h4>
                             <button className="close-btn" onClick={handleCloseModal}><X size={20} /></button>
@@ -246,6 +256,12 @@ const CrudTable = ({ title, endpoint, columns, formFields }) => {
                                                 className="form-input"
                                                 required={field.required !== false && !formData[field.key]}
                                             />
+                                            {isUploading && (
+                                                <div className="upload-loading">
+                                                    <div className="spinner"></div>
+                                                    Đang tải lên...
+                                                </div>
+                                            )}
                                             {formData[field.key] && (
                                                 <div className="image-preview">
                                                     {formData[field.key].endsWith('.mp3') ? (

@@ -151,7 +151,7 @@ const MainContent = () => {
             {/* THÔNG TIN KẾT QUẢ VÀ BAN PHONG TRÀO */}
             <div className="main-content-area" id="ban-phong-trao">
                 <div className="committee-section glass-panel" style={{ marginBottom: '20px' }}>
-                    <h3 className="section-title"><Users /> Ban quản trị tỉnh đoàn</h3>
+                    <h3 className="section-title"><Users /> Ban quản trị Tỉnh đoàn</h3>
 
                     <div className="slider-container">
                         {/* Chỉ hiển thị nút khi có nhiều hơn 4 thành viên */}

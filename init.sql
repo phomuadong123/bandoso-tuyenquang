@@ -63,7 +63,7 @@ CREATE TABLE documents (
 CREATE TABLE committee (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150),
-    role VARCHAR(100),
+    role VARCHAR(),
     phone VARCHAR(50),
     avatar VARCHAR(255),
     unit VARCHAR(150),
