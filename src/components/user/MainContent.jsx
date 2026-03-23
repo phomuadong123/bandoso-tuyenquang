@@ -102,7 +102,7 @@ const MainContent = () => {
 
             {/* KHU VỰC BẢN ĐỒ VÀ MÔ TẢ */}
             <div className="map-section glass-panel" style={{ marginBottom: '20px' }} id="ban-do">
-                <h3 className="section-title" style={{ marginBottom: '0' }}>Bản Đồ Số Tình Nguyện (Điểm Tiếp Nhận Kết Nối Tình Nguyện)</h3>
+                <h3 className="section-title" style={{ marginBottom: '0' }}>Bản đồ số tình nguyện (Điểm tiếp nhận kết nối tình nguyện)</h3>
                 <p className="section-description">Danh sách các địa điểm, thông tin kết nối, tiếp nhận nguồn lực tổ chức các hoạt động tình nguyện do các cấp bộ Đoàn làm đầu mối</p>
 
                 <div className="map-container">
@@ -151,7 +151,7 @@ const MainContent = () => {
             {/* THÔNG TIN KẾT QUẢ VÀ BAN PHONG TRÀO */}
             <div className="main-content-area" id="ban-phong-trao">
                 <div className="committee-section glass-panel" style={{ marginBottom: '20px' }}>
-                    <h3 className="section-title"><Users /> Ban Quản Trị Tỉnh Đoàn</h3>
+                    <h3 className="section-title"><Users /> Ban quản trị tỉnh đoàn</h3>
 
                     <div className="slider-container">
                         {/* Chỉ hiển thị nút khi có nhiều hơn 4 thành viên */}
